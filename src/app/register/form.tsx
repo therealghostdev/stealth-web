@@ -3,6 +3,7 @@
 import React from "react"
 
 import { redirect } from "next/navigation"
+import Link from "next/link"
 
 type FormProps = {
     action: (
@@ -58,7 +59,7 @@ const Form = ({ action, ...props }: FormProps) => {
         setEmail("")
         setPassword("")
         setConfirmPassword("")
-        // redirect("/account/activate")
+        redirect("/account/activate")
     }
 
     React.useEffect(() => {
@@ -147,10 +148,21 @@ const Form = ({ action, ...props }: FormProps) => {
                 <div className="flex flex-col px-5 py-2">
                     <button
                         disabled={isButtonDisabled}
-                        className="bg-black disabled:cursor-not-allowed disabled:bg-slate-400 text-white rounded-lg px-3 py-2 text-[14px] font-semibold"
+                        className="bg-black disabled:cursor-not-allowed disabled:bg-slate-400 text-white rounded-lg px-3 py-2 text-[16px] font-semibold"
                     >
                         Register
                     </button>
+                </div>
+                <div className="flex flex-col items-center px-5 py-2">
+                    <p className="text-[15px] text-black">
+                        Already have an account?{" "}
+                        <Link
+                            href="/api/auth/signin"
+                            className="text-blue-500 font-semibold"
+                        >
+                            Login
+                        </Link>
+                    </p>
                 </div>
             </div>
         </form>

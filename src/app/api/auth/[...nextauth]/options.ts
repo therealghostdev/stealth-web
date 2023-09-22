@@ -1,5 +1,6 @@
 import jwt_decode from "jwt-decode"
 import { NextAuthOptions, Session } from "next-auth"
+import { JWT } from "next-auth/jwt"
 import CredentialsProvider from "next-auth/providers/credentials"
 
 import endpoints from "@/config/endpoints"
@@ -10,7 +11,7 @@ export const authOptions: NextAuthOptions = {
         CredentialsProvider({
             name: "Credentials",
             credentials: {
-                username: {
+                email: {
                     label: "Username/email",
                     type: "text",
                     placeholder: "extheo@stealth.money"
@@ -25,7 +26,10 @@ export const authOptions: NextAuthOptions = {
                 const authEndpoint = endpoints().auth.login
                 const res = await fetch(authEndpoint, {
                     method: "POST",
-                    body: JSON.stringify(credentials),
+                    body: JSON.stringify({
+                        username: credentials?.email,
+                        password: credentials?.password
+                    }),
                     headers: { "Content-Type": "application/json" }
                 })
 
@@ -38,25 +42,44 @@ export const authOptions: NextAuthOptions = {
             }
         })
     ],
+    pages: {
+        signIn: "/account/login",
+        signOut: "/account/logout"
+    },
     session: {
-        maxAge: 60 * 15 // 15 minutes
+        // maxAge: 60 * 15 // 15 minutes
+        strategy: "jwt"
     },
     callbacks: {
-        async jwt({ token, user }: { token: any; user: any }) {
+        async signIn({ user }) {
             if (user && user?.id_token) {
-                token.accessToken = user.id_token
+                return true
+            } else {
+                return false
+            }
+        },
+
+        async jwt({ token, user }) {
+            if (user && user?.id_token) {
+                token.id_token = user.id_token
             }
             return token
         },
 
-        async session({ session, token }: { session: Session; token: any }) {
-            if (token.accessToken) {
-                const decoded: DecodedJwt = jwt_decode(token.accessToken)
-                session.accessToken = token.accessToken
-                session.user.name = decoded.sub
+        async session({ session, token }: { session: Session; token: JWT }) {
+            session.accessToken = undefined
+            if (token.id_token) {
+                const decoded: DecodedJwt = jwt_decode(token.id_token)
+                session.accessToken = token.id_token
+                if (decoded.sub.includes("@")) {
+                    token.email = decoded.sub
+                    session.user.email = decoded.sub
+                } else {
+                    token.name = decoded.sub
+                    session.user.name = decoded.sub
+                }
                 session.user.role = decoded.auth
             }
-            console.log({ session })
             return session
         }
     }

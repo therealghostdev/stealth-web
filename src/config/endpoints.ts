@@ -9,7 +9,8 @@ const endpoints = (params?: string | number) => {
 
     const user = {
         register: `${baseUrl}/register`,
-        profile: `${baseUrl}/profile/info`
+        profile: `${baseUrl}/profile/info`,
+        activate: `${baseUrl}/activate?key=${params}`
     }
 
     const auth = {

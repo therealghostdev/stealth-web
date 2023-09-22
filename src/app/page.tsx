@@ -2,7 +2,7 @@ import { auth } from "@/auth"
 
 export default async function Home() {
     const data = await auth()
-    console.log(data)
+
     if (!data?.accessToken) {
         return (
             <main className="flex min-h-screen flex-col items-center justify-between p-24">
@@ -27,8 +27,8 @@ export default async function Home() {
                 </p>
                 <div className="mt-8 flex items-center justify-center flex-col">
                     <h2 className="text-2xl font-bold">Session</h2>
-                    <p className="text-center">name: {data?.user.name}</p>
-                    <p className="text-center">email: {data?.user.role}</p>
+                    <p className="text-center">Name: {data?.user.name || data.user.email}</p>
+                    <p className="text-center">E-mail: {data?.user.role}</p>
                 </div>
             </div>
         </main>
