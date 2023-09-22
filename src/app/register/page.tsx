@@ -2,7 +2,7 @@ import endpoints from "@/config/endpoints"
 
 import Form from "./form"
 
-export const registerUser = async (formData: FormData) => {
+const registerUser = async (formData: FormData) => {
     "use server"
     const url = endpoints().user.register
     const email = formData.get("email")
