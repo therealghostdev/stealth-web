@@ -1,109 +1,108 @@
 "use client"
-
-import { signIn } from "next-auth/react"
-import Link from "next/link"
 import { useRouter, useSearchParams } from "next/navigation"
-import React from "react"
+import { signIn } from "next-auth/react"
+import { useState } from "react"
+import Link from "next/link"
 
-export default function Page() {
-    const router = useRouter()
-    const searchParams = useSearchParams()
+import { Button, Dialog, Input, Spinner } from "@/components"
 
-    const [error, setError] = React.useState("")
-    const [loading, setLoading] = React.useState(false)
-    const callbackUrl = searchParams.get("callbackUrl") || "/"
+const Page = () => {
+	const searchParams = useSearchParams()
+	const callbackUrl = searchParams.get("callbackUrl") ?? "/dashboard"
+	const router = useRouter()
 
-    const formAction = async (formData: FormData) => {
-        try {
-            setError("")
-            setLoading(true)
-            const res = await signIn("credentials", {
-                email: formData.get("email") as string,
-                password: formData.get("password") as string,
-                redirect: false,
-                callbackUrl
-            })
-            setLoading(false)
-            if (!res?.error) {
-                router.push(callbackUrl)
-            } else {
-                setError("Invalid email/username or password")
-            }
-        } catch (error: any) {
-            setLoading(false)
-            setError(error.message)
-        }
-    }
+	const [formFields, setFormFields] = useState({ email: "", password: "" })
+	const [loading, setLoading] = useState(false)
+	const [error, setError] = useState("")
 
-    return (
-        <form
-            method="POST"
-            action={formAction}
-            className="flex flex-col absolute top-[45%] left-[50%] -translate-x-[50%] -translate-y-[45%]"
-        >
-            <div
-                className={`bg-none ${
-                    error ? "bg-red-100" : ""
-                } rounded-lg px-5 py-4 mb-5 flex items-center justify-center text-[14px] text-red-700 font-semibold opacity-[0.8]`}
-            >
-                {error ? <p>{error}</p> : null}
-            </div>
+	const handleChange = (e: React.ChangeEvent<HTMLInputElement>) =>
+		setFormFields({ ...formFields, [e.target.name]: e.target.value })
 
-            <div className="bg-slate-100 w-[300px] h-fit rounded-xl pt-3 pb-8">
-                <h2 className="text-[20px] font-semibold text-black text-center pt-3">
-                    Sign in
-                </h2>
-                <div className="flex flex-col px-5 py-2">
-                    <label
-                        htmlFor="email"
-                        className="text-[14px] font-semibold text-black mb-1"
-                    >
-                        Email/Username
-                    </label>
-                    <input
-                        className="border border-gray-300 rounded-lg px-3 py-2 text-[14px] text-black"
-                        type="email"
-                        name="email"
-                        required
-                        placeholder="theo@stealth.money"
-                    />
-                </div>
-                <div className="flex flex-col px-5 py-2">
-                    <label
-                        htmlFor="password"
-                        className="text-[14px] font-semibold text-black mb-1"
-                    >
-                        Password
-                    </label>
-                    <input
-                        className="border border-gray-300 rounded-lg px-3 py-2 text-[14px] text-black"
-                        required
-                        name="password"
-                        type="password"
-                        placeholder="Password"
-                    />
-                </div>
+	const formAction = async (e: React.FormEvent<HTMLFormElement>) => {
+		e.preventDefault()
+		if (!formFields.email || !formFields.password) {
+			return setError("Incomplete fields!")
+		}
+		setLoading(true)
+		try {
+			const res = await signIn("credentials", {
+				username: formFields.email,
+				password: formFields.password,
+				redirect: false,
+				callbackUrl,
+			})
+			if (res && !res.ok) {
+				setError(String(res.error))
+				setLoading(false)
+				return
+			}
+			setLoading(false)
+			router.push(callbackUrl)
+		} catch (error) {
+			if (error instanceof Error) {
+				setError(String(error.message))
+				setLoading(false)
+			}
+		}
+	}
 
-                <div className="flex flex-col px-5 py-2">
-                    <button
-                        disabled={loading}
-                        className="bg-black disabled:cursor-not-allowed disabled:bg-slate-500 text-white rounded-lg px-3 py-2 text-[16px] font-semibold"
-                    >
-                        Login
-                    </button>
-                </div>
-                <div className="flex flex-col items-center px-5 py-2">
-                    <p className="text-[15px] text-black">
-                        Don&apos;t have an account?{" "}
-                        <Link
-                            href="/register"
-                            className="text-blue-500 font-semibold"
-                        >
-                            Sign up
-                        </Link>
-                    </p>
-                </div>
-            </div>
-        </form>
-    )
+	return (
+		<>
+			{error && (
+				<Dialog
+					isOpen={error !== ""}
+					onDismiss={() => setError("")}
+					title="Login Error!"
+					type="error"
+					large
+					description="Invalid credentials. Please check and retry.">
+					<div></div>
+				</Dialog>
+			)}
+			<div className="h-full w-full">
+				<p className="font-satoshi text-[28px] font-bold">Welcome Back!</p>
+				<p className="text-lg">
+					Please enter your login credentials to access your account
+				</p>
+				<form onSubmit={formAction} className="mt-10 flex w-full flex-col">
+					<div className="flex w-full flex-col gap-6">
+						<Input
+							typed="email"
+							name="email"
+							onChange={handleChange}
+							label="Email Address"
+							required
+						/>
+						<Input
+							typed="password"
+							name="password"
+							onChange={handleChange}
+							label="Password"
+							required
+						/>
+						<div className="flex w-full justify-end">
+							<Link
+								href="/account/forgot-password"
+								className="link text-alt-orange-100">
+								Forgot Password
+							</Link>
+						</div>
+					</div>
+					<div className="mt-[350px] flex w-full flex-col gap-5">
+						<Button type="submit" width="w-full" disabled={loading}>
+							{loading ? <Spinner /> : "Log In"}
+						</Button>
+						<p className="flex items-center justify-center text-center">
+							Don&apos;t have an account yet?
+							<Link href="/account/register" className="link ml-1 text-alt-orange-100">
+								Create account
+							</Link>
+						</p>
+					</div>
+				</form>
+			</div>
+		</>
+	)
 }
+
+export default Page

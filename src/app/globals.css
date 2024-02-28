@@ -3,9 +3,15 @@
 @tailwind utilities;
 
 :root {
-    --foreground-rgb: 0, 0, 0;
-    --background-start-rgb: 214, 219, 220;
-    --background-end-rgb: 255, 255, 255;
+	font-synthesis: none;
+	text-rendering: optimizeLegibility;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+	-webkit-text-size-adjust: 100%;
+
+	--foreground-rgb: 0, 0, 0;
+	--background-start-rgb: 214, 219, 220;
+	--background-end-rgb: 255, 255, 255;
 }
 
 /* @media (prefers-color-scheme: dark) {
@@ -16,12 +22,105 @@
     }
 } */
 
+/* removes scrollbar */
+::-webkit-scrollbar {
+	width: 0;
+}
+
+* {
+	box-sizing: border-box;
+	margin: 0;
+	padding: 0;
+	user-select: none;
+}
+
+html {
+	scroll-behavior: smooth;
+}
+
 body {
-    color: rgb(var(--foreground-rgb));
-    background: linear-gradient(
-            to bottom,
-            transparent,
-            rgb(var(--background-end-rgb))
-        )
-        rgb(var(--background-start-rgb));
+	color: rgb(var(--foreground-rgb));
+	background: linear-gradient(
+			to bottom,
+			transparent,
+			rgb(var(--background-end-rgb))
+		)
+		rgb(var(--background-start-rgb));
+	font-family: var(--nunito);
+	overflow-x: hidden;
+}
+
+img {
+	image-rendering: crisp-edges -moz-crisp-edges;
+}
+
+input,
+select,
+textarea {
+	outline: none;
+	border: none;
+}
+
+input:-webkit-autofill,
+input:-webkit-autofill:focus {
+	transition:
+		background-color 600000s 0s,
+		color 600000s 0s;
+	-webkit-text-fill-color: #fff !important;
+}
+
+input[data-autocompleted] {
+	background-color: transparent !important;
+}
+
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+	-webkit-appearance: none;
+}
+
+input[type="file"]::-webkit-file-upload-button {
+	display: none;
+}
+
+svg {
+	shape-rendering: crispEdges;
+}
+
+svg circle,
+svg line,
+svg path,
+svg polygon,
+svg rect {
+	shape-rendering: geometricprecision;
+}
+
+/* link underline effect */
+.link {
+	position: relative;
+	width: fit-content;
+}
+
+.link::before {
+	content: "";
+	position: absolute;
+	bottom: 0;
+	right: 0;
+	width: 0;
+	height: 2px;
+	background: #f7931a;
+	transition: width 0.7s cubic-bezier(0.25, 1, 0.5, 1);
+	-moz-transition: width 0.7s cubic-bezier(0.25, 1, 0.5, 1);
+	-webkit-transition: width 0.7s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.link.white::before {
+	background: #fff;
+}
+
+@media (hover: hover) and (pointer: fine) {
+	.link:hover::before {
+		left: 0;
+		right: auto;
+		width: 100%;
+	}
 }

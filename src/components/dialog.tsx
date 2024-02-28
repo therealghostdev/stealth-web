@@ -1,64 +1,80 @@
+"use client"
+
+import { CheckCircle, WarningCircle, XCircle } from "@phosphor-icons/react"
+import { Cross2Icon } from "@radix-ui/react-icons"
+import * as Dialog from "@radix-ui/react-dialog"
 import React from "react"
 
-import * as Dialog from "@radix-ui/react-dialog"
-import { Cross2Icon } from "@radix-ui/react-icons"
-
 interface CustomDialogProps {
-    children: React.ReactNode
-    isOpen: boolean
-    onDismiss: () => void
-    title: string
-    titleClassName?: string
-    description?: string
-    descriptionClassName?: string
-    overlayStyle?: string
+	children?: React.ReactNode
+	isOpen: boolean
+	onDismiss: () => void
+	title?: string
+	titleClassName?: string
+	description?: string
+	descriptionClassName?: string
+	overlayStyle?: string
+	large?: boolean
+	type?: "error" | "success" | "warning" | "info"
+}
+
+const DialogIcon = {
+	error: <XCircle weight="fill" className="my-8 text-9xl text-red-100" />,
+	success: (
+		<CheckCircle weight="fill" className="my-8 text-9xl text-green-100" />
+	),
+	warning: (
+		<WarningCircle weight="fill" className="my-8 text-9xl text-orange-100" />
+	),
+	info: <WarningCircle weight="fill" className="my-8 text-9xl text-blue-500" />,
 }
 
 const CustomDialog = ({
-    children,
-    isOpen,
-    onDismiss,
-    title,
-    titleClassName,
-    description,
-    descriptionClassName,
-    overlayStyle = "data-[state=open]:animate-overlayShow"
+	children,
+	isOpen,
+	onDismiss,
+	title,
+	titleClassName,
+	description,
+	descriptionClassName,
+	type,
+	large,
+	overlayStyle = "data-[state=open]:animate-overlayShow",
 }: CustomDialogProps) => {
-    return (
-        <Dialog.Root open={isOpen} onOpenChange={onDismiss}>
-            <Dialog.Trigger asChild />
-            <Dialog.Portal>
-                <Dialog.Overlay
-                    className={`${overlayStyle} bg-white-700 opacity-50 data-[state=open]:animate-overlayShow fixed inset-0`}
-                />
-                <Dialog.Content className="data-[state=open]:animate-contentShow fixed top-[50%] left-[50%] max-h-[100vh] w-[90vw] max-w-[500px] translate-x-[-50%] translate-y-[-50%] rounded-[6px] bg-black-100 text-white-100 p-[30px] shadow-[hsl(206_22%_7%_/_35%)_0px_10px_38px_-10px,_hsl(206_22%_7%_/_20%)_0px_10px_20px_-15px] focus:outline-none">
-                    <Dialog.Title
-                        className={`m-0 text-[17px] font-medium ${
-                            titleClassName || ""
-                        }`}
-                    >
-                        {title}
-                    </Dialog.Title>
-                    <Dialog.Description
-                        className={`mt-[10px] mb-5 text-[15px] leading-normal ${
-                            descriptionClassName || ""
-                        }`}
-                    >
-                        {description}
-                    </Dialog.Description>
-                    {children}
-                    <Dialog.Close asChild>
-                        <button
-                            className="absolute -top-10 -right-7 bg-black-100 text-white hover:bg-slate-800 focus:shadow-black-500 inline-flex h-[25px] w-[25px] appearance-none items-center justify-center rounded-full focus:shadow-[0_0_0_2px] focus:outline-none"
-                            aria-label="Close"
-                        >
-                            <Cross2Icon />
-                        </button>
-                    </Dialog.Close>
-                </Dialog.Content>
-            </Dialog.Portal>
-        </Dialog.Root>
-    )
+	return (
+		<Dialog.Root open={isOpen} onOpenChange={onDismiss}>
+			<Dialog.Trigger asChild />
+			<Dialog.Portal>
+				<Dialog.Overlay
+					className={`${overlayStyle} data-[state=open]:animate-overlayShow fixed inset-0 bg-white-100/40`}
+				/>
+				<Dialog.Content
+					className={`data-[state=open]:animate-contentShow fixed left-[50%] top-[50%] flex max-h-[100vh] w-[90vw] translate-x-[-50%] translate-y-[-50%] flex-col items-center rounded-[6px] bg-black-100 p-[30px] text-white-100 shadow-[hsl(206_22%_7%_/_35%)_0px_10px_38px_-10px,_hsl(206_22%_7%_/_20%)_0px_10px_20px_-15px] focus:outline-none ${
+						large ? "max-w-[750px]" : "max-w-[528px]"
+					}`}>
+					{type && DialogIcon[type]}
+					<Dialog.Title
+						className={`m-0 font-satoshi text-4xl font-bold ${titleClassName || ""}`}>
+						{title}
+					</Dialog.Title>
+					<Dialog.Description
+						className={`mb-5 mt-[10px] text-center text-lg leading-normal ${
+							descriptionClassName || ""
+						}`}>
+						{description}
+					</Dialog.Description>
+					{children}
+					<Dialog.Close asChild>
+						<button
+							className="text-white absolute -right-7 -top-10 inline-flex h-[25px] w-[25px] appearance-none items-center justify-center rounded-full bg-black-100 hover:bg-slate-800 focus:shadow-[0_0_0_2px] focus:shadow-black-500 focus:outline-none"
+							aria-label="Close">
+							<Cross2Icon />
+						</button>
+					</Dialog.Close>
+				</Dialog.Content>
+			</Dialog.Portal>
+		</Dialog.Root>
+	)
 }
 
 export default CustomDialog
