@@ -25,14 +25,14 @@ const getPaymentDetails = async (code: string) => {
 	return data.data as PaymentDetails
 }
 
-export default async function Page({
-	searchParams,
-}: {
-	searchParams: {
-		code: string
-	}
+// Using the Promise-based pattern for params
+export default async function Page(props: {
+	searchParams: Promise<{ code?: string }>
 }) {
-	const { code } = searchParams
+	// Await the searchParams Promise
+	const searchParams = await props.searchParams
+	const code = searchParams.code
+
 	if (!code) {
 		return (
 			<div className="flex h-screen w-full flex-col items-center justify-center overflow-y-auto bg-black-600 p-2">
