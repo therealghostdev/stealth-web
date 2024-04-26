@@ -122,7 +122,7 @@ const Page = () => {
 					onSubmit={(e) => formAction(e)}
 					className="mt-10 flex h-full w-full flex-col">
 					<div className="flex w-full flex-col gap-6">
-						<div className="flex w-full">
+						<div className="flex w-full flex-col md:flex-row">
 							<div className="md:2/4 mr-2 w-full md:w-2/4">
 								<Input
 									typed="text"
@@ -132,7 +132,7 @@ const Page = () => {
 								/>
 							</div>
 
-							<div className="mx-2 w-full md:w-2/4">
+							<div className="my-5 w-full md:mx-2 md:my-auto md:w-2/4">
 								<Input
 									typed="text"
 									name="lastName"
