@@ -1,18 +1,17 @@
 "use client"
 import { useSearchParams } from "next/navigation"
-import { useQuery } from "@tanstack/react-query"
 import Link from "next/link"
-
 import { activate } from "@/app/helpers/activate"
 import { Dialog, Spinner } from "@/components"
-import React from "react"
+import React, { Suspense } from "react"
 
 interface Data {
 	status: number
 	message: string
 }
 
-const Page = () => {
+// Component that uses useSearchParams
+const ActivationContent = () => {
 	const searchParams = useSearchParams()
 	const key = searchParams.get("key")
 
@@ -72,6 +71,21 @@ const Page = () => {
 				<Spinner />
 			</div>
 		)
+	return null
+}
+
+const LoadingFallback = () => (
+	<div className="grid h-full w-full place-items-center">
+		<Spinner />
+	</div>
+)
+
+const Page = () => {
+	return (
+		<Suspense fallback={<LoadingFallback />}>
+			<ActivationContent />
+		</Suspense>
+	)
 }
 
 export default Page

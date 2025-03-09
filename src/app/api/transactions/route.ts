@@ -1,7 +1,7 @@
-import { NextRequest, NextResponse } from "next/server"
+import { NextResponse } from "next/server"
 import endpoints from "@/config/endpoints"
 
-export async function GET(request: NextRequest, response: NextResponse) {
+export async function GET(request: Request) {
 	try {
 		const url = endpoints().transactions.list
 		const res = await fetch(url, {

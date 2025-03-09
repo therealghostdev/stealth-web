@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server"
 import endpoints from "@/config/endpoints"
 
-export async function POST(request: Request, response: NextResponse) {
+export async function POST(request: Request) {
 	const url = endpoints().auth["finish-reset-password"]
 	const payload = await request.json()
 	try {

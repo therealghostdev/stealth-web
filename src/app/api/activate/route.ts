@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server"
 import endpoints from "@/config/endpoints"
 
-export async function GET(request: NextRequest, response: NextResponse) {
+export async function GET(request: NextRequest) {
 	const url = endpoints().user.activate
 	const key = await request.nextUrl.searchParams.get("key")
 	if (!key) {

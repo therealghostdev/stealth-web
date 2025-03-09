@@ -1,10 +1,8 @@
-interface Props {
-	params: {
-		id: string
-	}
-}
+// interface Props {
+// 	params: { id: string }
+// }
 
-const Page = ({ params: { id } }: Props) => {
+const Page = () => {
 	return <div>Page</div>
 }
 
