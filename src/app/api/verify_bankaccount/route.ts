@@ -29,7 +29,7 @@ export async function POST(req: Request) {
 		// 1. on the UI  when user inputs bankname and account number, validate it the account number and
 		// return the name on the account so user knows if the account they provided
 
-		// 2. if step1 was successfull validate Bvn and compare data returned from preambly with
+		// 2. if step1 was successful validate Bvn and compare data returned from preambly with
 		// user's data so if it's incorrect, return a failure message if bvn verification fails.
 
 		// 3. if bvn verification was successful, proceed to face verification using face liveness

@@ -44,7 +44,7 @@ export async function POST(req: Request) {
 
 		return NextResponse.json({
 			success: true,
-			message: "verification request successfull",
+			message: "verification request successful",
 			data: faceLivenessVerification.data,
 		})
 	} catch (err) {
