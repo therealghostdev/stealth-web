@@ -1,16 +1,14 @@
 "use client"
 import { useRouter, useSearchParams } from "next/navigation"
 import { signIn } from "next-auth/react"
-import { useState } from "react"
+import { useState, Suspense } from "react"
 import Link from "next/link"
-
 import { Button, Dialog, Input, Spinner } from "@/components"
 
-const Page = () => {
+const LoginForm = () => {
 	const searchParams = useSearchParams()
 	const callbackUrl = searchParams.get("callbackUrl") ?? "/dashboard"
 	const router = useRouter()
-
 	const [formFields, setFormFields] = useState({ email: "", password: "" })
 	const [loading, setLoading] = useState(false)
 	const [error, setError] = useState("")
@@ -104,6 +102,20 @@ const Page = () => {
 				</form>
 			</div>
 		</>
+	)
+}
+
+const LoadingFallback = () => (
+	<div className="flex h-full w-full items-center justify-center">
+		<Spinner />
+	</div>
+)
+
+const Page = () => {
+	return (
+		<Suspense fallback={<LoadingFallback />}>
+			<LoginForm />
+		</Suspense>
 	)
 }
 

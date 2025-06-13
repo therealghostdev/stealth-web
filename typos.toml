@@ -4,3 +4,8 @@ default.extend-ignore-identifiers-re = [
 ]
 
 default.extend-ignore-re = ["\"eyJ[a-zA-Z0-9_\\-\\.]+\""]
+
+[files]
+extend-exclude = [
+  "public/models/**",
+]

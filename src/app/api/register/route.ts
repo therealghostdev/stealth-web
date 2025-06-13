@@ -1,7 +1,7 @@
 import endpoints from "@/config/endpoints"
 import { NextRequest, NextResponse } from "next/server"
 
-export async function POST(request: Request, response: NextResponse) {
+export async function POST(request: Request) {
 	const url = endpoints().user.register
 	const userData = await request.json()
 	if (!userData) {
