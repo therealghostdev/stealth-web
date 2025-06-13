@@ -119,7 +119,7 @@ const DashboardLayoutClient = ({
 				</div>
 				<div className="flex h-full w-4/5 flex-1 flex-col">
 					<div className="flex w-full items-center justify-end border-b border-black-500 p-6 md:justify-between">
-						<div className="flex w-full justify-end items-center gap-5">
+						<div className="flex w-full items-center justify-end gap-5">
 							<button title="notification" className="rounded-full border p-2">
 								<Bell />
 							</button>

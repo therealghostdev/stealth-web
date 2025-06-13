@@ -121,14 +121,14 @@ export default function Start({
 	}
 
 	return (
-		<div className="md:relative w-full z-0">
+		<div className="z-0 w-full md:relative">
 			{kycProgress > 0 && (
 				<div>
 					<button
 						onClick={reverseKycProgress}
 						title="back"
-						className="md:absolute static md:left-0 md:top-0 left-[5%] top-[15%] flex
-items-center justify-center gap-x-2 bg-transparent text-[#CCCCCC] z-0">
+						className="static left-[5%] top-[15%] z-0 flex items-center justify-center
+gap-x-2 bg-transparent text-[#CCCCCC] md:absolute md:left-0 md:top-0">
 						<Image src={"/Square.svg"} alt="back" width={20} height={10} /> Go back
 					</button>
 				</div>

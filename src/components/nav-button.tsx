@@ -25,7 +25,7 @@ const NavButton = (props: Props) => {
 
 	return (
 		<div className="flex items-center gap-2">
-			<div className="aspect-square w-8 rounded-full mr-1">
+			<div className="mr-1 aspect-square w-8 rounded-full">
 				{props.user.imageUrl ? (
 					<div className="relative aspect-square w-full rounded-full">
 						<Image
