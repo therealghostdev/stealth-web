@@ -88,6 +88,10 @@ const Client = ({ exchangeRate: { data }, profile, transactions }: Props) => {
 		})
 	}
 
+	useEffect(() => {
+		console.log(profile, "is user profile")
+	}, [profile])
+
 	return (
 		<>
 			<section>
@@ -163,9 +167,9 @@ const Client = ({ exchangeRate: { data }, profile, transactions }: Props) => {
 							</div>
 							<div className="hidden h-full items-center justify-center rounded-lg border border-black-500 bg-black-700 p-6 md:col-span-2 md:flex lg:col-span-3">
 								<Image
-									src="/trezor.png"
+									src="/dashboard_stealth_large.png"
 									alt="Market Summary"
-									width={300}
+									width={500}
 									height={120}
 								/>
 							</div>

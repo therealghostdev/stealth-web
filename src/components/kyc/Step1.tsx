@@ -143,13 +143,21 @@ export default function Step1({
 	// problem with this useEffect hook
 	useEffect(() => {
 		if (
+			isBvnData?.data?.data?.gender?.toLowerCase() !==
+			formValues.gender.toLowerCase()
+		) {
+			setGenderVerified(false)
+		}
+
+		if (
 			formValues.gender !== "" &&
 			formValues.gender !== "--" &&
 			bvnVerified &&
 			isBvnData
 		) {
 			if (
-				isBvnData.data.data.gender.toLowerCase() === formValues.gender.toLowerCase()
+				isBvnData?.data?.data?.gender.toLowerCase() ===
+				formValues.gender.toLowerCase()
 			) {
 				setGenderVerified(true)
 			}
@@ -187,7 +195,7 @@ export default function Step1({
 	])
 
 	return (
-		<section className="flex min-h-screen w-full items-center justify-center">
+		<section className="z-0 flex min-h-screen w-full items-center justify-center">
 			<div className="my-8 mt-24 flex w-full flex-col md:w-2/4">
 				<div className="w-full">
 					<h1 className="text-[20px] font-bold lg:text-[28px]">

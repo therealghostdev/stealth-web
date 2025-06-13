@@ -25,7 +25,7 @@ const NavButton = (props: Props) => {
 
 	return (
 		<div className="flex items-center gap-2">
-			<div className="aspect-square w-8 rounded-full">
+			<div className="aspect-square w-8 rounded-full mr-1">
 				{props.user.imageUrl ? (
 					<div className="relative aspect-square w-full rounded-full">
 						<Image
@@ -35,20 +35,21 @@ const NavButton = (props: Props) => {
 						/>
 					</div>
 				) : (
-					<div className="grid aspect-square w-8 place-items-center rounded-full bg-alt-orange-100">
+					<div className="grid aspect-square w-10 place-items-center rounded-full bg-alt-orange-100">
 						<p className="text-lg font-bold uppercase">{getChars(displayName)}</p>
 					</div>
 				)}
 			</div>
+			{/* // commented code below will be revisited in the future */}
 			<button onClick={() => setOpenMenu(true)} className="flex items-center">
 				<p className="font-satoshi text-sm font-bold">{displayName}</p>
-				<span>
+				{/* <span>
 					<CaretDown
 						className={`ml-1 transition-all duration-100 ${
 							openMenu ? "rotate-180" : ""
 						}`}
 					/>
-				</span>
+				</span> */}
 			</button>
 			{openMenu && (
 				<div
