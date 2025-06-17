@@ -199,7 +199,7 @@ export default function Step2({
 					}
 				},
 				"image/jpeg",
-				0.8
+				0.9
 			)
 			setIsCameraActive(false)
 		} catch (error) {
@@ -354,7 +354,7 @@ export default function Step2({
 						isOpen={open}
 						onDismiss={() => handleModal(false)}
 						title={`${
-							data?.data?.response_code === "01" || data?.data?.response_code === "00"
+							data?.data?.response_code === "00"
 								? "Kyc verification Successful"
 								: "Kyc Verification Failed"
 						}`}></CustomDialog>

@@ -94,6 +94,18 @@ svg rect {
 	shape-rendering: geometricprecision;
 }
 
+.background-imag {
+	background: url("/Rectangle 3.png") no-repeat center/cover;
+}
+
+.circled {
+	background: url("/Vector 4.svg") no-repeat center;
+	background-size: contain;
+	display: inline-block;
+	padding: 1rem 0rem; /* Adjust to match your SVG's size */
+}
+
+
 /* link underline effect */
 .link {
 	position: relative;
