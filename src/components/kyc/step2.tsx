@@ -348,6 +348,7 @@ export default function Step2({
 								? "Congratulations your kyc verification was successful 🎉"
 								: " 😔 KYC verification failed, try again or contact support for more details if problem persists"
 						}></CustomDialog>
+
 				</div>
 			)}
 		</section>
