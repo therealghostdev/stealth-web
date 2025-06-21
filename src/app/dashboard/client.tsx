@@ -88,21 +88,19 @@ const Client = ({ exchangeRate: { data }, profile, transactions }: Props) => {
 		})
 	}
 
-	useEffect(() => {
-		console.log(profile, "is user profile")
-	}, [profile])
-
 	return (
 		<>
-			<section>
-				<Start
-					open={openModal}
-					setOpen={closeModal}
-					setKycProgress={IncreaseKycProgress}
-					kycProgress={kycScreen}
-					reverseKycProgress={reduceKycProgress}
-				/>
-			</section>
+			{profile.kycLevel === "ONE" && (
+				<section>
+					<Start
+						open={openModal}
+						setOpen={closeModal}
+						setKycProgress={IncreaseKycProgress}
+						kycProgress={kycScreen}
+						reverseKycProgress={reduceKycProgress}
+					/>
+				</section>
+			)}
 
 			{kycScreen === 0 && (
 				<>

@@ -1,80 +1,27 @@
-import axios from "axios"
-
-export const identityPassApi = axios.create({
-	baseURL: process.env.PREMBLY_BASE_URL,
-	headers: {
-		"x-api-key": process.env.PREMBLY_API_KEY,
-		app_id: process.env.PREMBLY_APP_ID,
-		accept: "application/json",
-	},
-})
-
-export const fetchBankCodeList = async () => {
-	try {
-		const response = await axios.get(process.env.BANK_NAME_FETCH || "")
-		return response.data
-	} catch (error) {
-		console.error("Error fetching bank codes:", error)
-		return null
-	}
-}
-
-interface qwuery {
-	bankName: string
-	AccountNumber: string
-}
 interface bvnQuery {
 	bvn: string
 }
-interface faceQuery {
-	faceCard: File | null
+interface faceQuery extends bvnQuery {
+	image: File | null
 }
 
-export const fetchAccountDetails = async ({
-	bankName,
-	AccountNumber,
-}: qwuery) => {
-	const { data } = await axios.post(
-		"/api/verify_bankaccount",
-		{
-			bankName,
-			AccountNumber,
-		},
-		{ headers: { "Content-Type": "application/json" } }
-	)
-	return data
-}
+export const verifyface = async ({ image, bvn }: faceQuery) => {
+	if (!(image instanceof File)) throw new Error("Invalid image")
 
-export const verifyBvn = async ({ bvn }: bvnQuery) => {
-	const { data } = await axios.post(
-		"/api/verify_bvn",
-		{
-			bvn,
-		},
-		{ headers: { "Content-Type": "application/json" } }
-	)
-	return data
-}
+	const base64Image = await fileToBase64(image)
 
-export const verifyface = async ({ faceCard }: faceQuery) => {
-	if (faceCard instanceof File) {
-		const base64Image = await fileToBase64(faceCard)
+	const response = await fetch("/api/verify_kyc", {
+		method: "POST",
+		headers: { "Content-Type": "application/json" },
+		body: JSON.stringify({ bvn, image: base64Image }),
+	})
 
-		const { data } = await axios.post(
-			"/api/face_liveness",
-			{
-				faceCard: base64Image,
-			},
-			{
-				headers: {
-					"Content-Type": "application/json",
-				},
-			}
-		)
-		return data
-	} else {
-		throw new Error("Invalid file object")
+	if (!response.ok) {
+		const err = await response.json()
+		throw new Error(err?.error || "Something went wrong")
 	}
+
+	return await response.json()
 }
 
 const fileToBase64 = (file: File): Promise<string> => {

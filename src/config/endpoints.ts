@@ -62,6 +62,8 @@ const endpoints = (params?: string | number) => {
 		list: `${baseUrl}/transactions`,
 	}
 
+	const kyc = `${baseUrl}/kyc/verify`
+
 	return {
 		user,
 		auth,
@@ -71,6 +73,7 @@ const endpoints = (params?: string | number) => {
 		price,
 		payment,
 		transactions,
+		kyc,
 	}
 }
 
