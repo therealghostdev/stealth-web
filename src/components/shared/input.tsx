@@ -55,7 +55,9 @@ const Input = (props: Props) => {
 				<label htmlFor={props.name} className="mb-1 font-satoshi text-sm">
 					{formatLabel(props.label)}
 				</label>
-				<textarea className="min-h-[150px] w-full resize-none rounded border bg-transparent transition-all duration-300 focus:bg-alt-orange-100"></textarea>
+				<textarea
+					title={props.name}
+					className="min-h-[150px] w-full resize-none rounded border bg-transparent transition-all duration-300 focus:bg-alt-orange-100"></textarea>
 				<p className="text-sm text-red-600">
 					{props.error ? props.error : props.note}
 				</p>
@@ -71,7 +73,9 @@ const Input = (props: Props) => {
 				</label>
 				<div className="h-[60px] w-full rounded border bg-transparent p-2 transition-all duration-300 focus-within:bg-alt-orange-100">
 					{props.icon}
-					<select className="h-full w-full rounded bg-transparent">
+					<select
+						title={props.name}
+						className="h-full w-full rounded bg-transparent">
 						{props.children}
 					</select>
 				</div>
@@ -134,6 +138,7 @@ export const CurrencyInput = (props: CurrencyInputProps) => {
 			</label>
 			<div className="flex h-[60px] w-full items-center rounded border bg-black-100 pr-2 transition-all duration-300 focus-within:border-alt-orange-100">
 				<input
+					title={props.selectName}
 					type="number"
 					name={props.inputName}
 					value={props.amount}
@@ -143,6 +148,7 @@ export const CurrencyInput = (props: CurrencyInputProps) => {
 					disabled={props.disableInput}
 				/>
 				<select
+					title={props.selectName}
 					name={props.selectName}
 					value={props.currency}
 					onChange={props.handleCurrencyChange}

@@ -25,25 +25,15 @@ export default function Start({
 	kycProgress,
 	reverseKycProgress,
 }: StartPropsTypes) {
-	const [accountName, setAccountName] = useState<string>("")
-	const [bvnVerified, setBvnVerified] = useState<boolean>(false)
-	const [bvnFailed, setBvnfailed] = useState<boolean>(false)
-	const [genderVerified, setGenderverified] = useState<boolean>(false)
 	const [buttonDisabled, setButtonDisabled] = useState<boolean>(true)
 
 	const [kycForm, setKycForm] = useState<KycFieldTypes>({
-		bankName: "",
-		AccountNumber: "",
 		Bvn: "",
-		gender: "",
 		faceCard: null,
 	})
 
 	const [formErrors, setFormErrors] = useState<FormErrorTypes>({
-		bankName: "",
-		AccountNumber: "",
 		Bvn: "",
-		gender: "",
 		faceCard: "",
 	})
 
@@ -65,35 +55,14 @@ export default function Start({
 
 	const validateForm = (formValues: KycFieldTypes) => {
 		const errors: FormErrorTypes = {
-			bankName: "",
-			AccountNumber: "",
 			Bvn: "",
-			gender: "",
 			faceCard: "",
-		}
-
-		if (!formValues.bankName.trim()) {
-			errors.bankName = "Bank name is required."
-		}
-
-		if (!formValues.AccountNumber.trim()) {
-			errors.AccountNumber = "Account number is required."
-		} else if (!/^\d{10}$/.test(formValues.AccountNumber)) {
-			errors.AccountNumber = "Account number must be 10 digits."
 		}
 
 		if (!formValues.Bvn.trim()) {
 			errors.Bvn = "BVN is required."
 		} else if (!/^\d{11}$/.test(formValues.Bvn)) {
 			errors.Bvn = "BVN must be 11 digits."
-		}
-
-		if (!formValues.gender.trim()) {
-			errors.gender = "Gender is required."
-		} else if (
-			!["male", "female", "other"].includes(formValues.gender.toLowerCase())
-		) {
-			errors.gender = "Gender must be Male, Female, or Other."
 		}
 
 		if (!formValues.faceCard) {
@@ -166,14 +135,6 @@ gap-x-2 bg-transparent text-[#CCCCCC] md:absolute md:left-0 md:top-0">
 					updateKycForm={handleChange}
 					formError={formErrors}
 					updateFormErrors={handleStep1Errors}
-					accountName={accountName}
-					setAccountName={setAccountName}
-					genderVerified={genderVerified}
-					setGenderVerified={setGenderverified}
-					bvnVerified={bvnVerified}
-					setBvnVerified={setBvnVerified}
-					bvnFailed={bvnFailed}
-					setBvnfailed={setBvnfailed}
 					buttonDisabled={buttonDisabled}
 					setButtonDisabled={setButtonDisabled}
 				/>
@@ -185,14 +146,6 @@ gap-x-2 bg-transparent text-[#CCCCCC] md:absolute md:left-0 md:top-0">
 					updateKycForm={handleChange}
 					formError={formErrors}
 					updateFormErrors={handleStep2Errors}
-					accountName={accountName}
-					setAccountName={setAccountName}
-					genderVerified={genderVerified}
-					setGenderVerified={setGenderverified}
-					bvnVerified={bvnVerified}
-					setBvnVerified={setBvnVerified}
-					bvnFailed={bvnFailed}
-					setBvnfailed={setBvnfailed}
 					buttonDisabled={buttonDisabled}
 					setButtonDisabled={setButtonDisabled}
 				/>

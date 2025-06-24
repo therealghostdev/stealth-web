@@ -88,21 +88,19 @@ const Client = ({ exchangeRate: { data }, profile, transactions }: Props) => {
 		})
 	}
 
-	useEffect(() => {
-		console.log(profile, "is user profile")
-	}, [profile])
-
 	return (
 		<>
-			<section>
-				<Start
-					open={openModal}
-					setOpen={closeModal}
-					setKycProgress={IncreaseKycProgress}
-					kycProgress={kycScreen}
-					reverseKycProgress={reduceKycProgress}
-				/>
-			</section>
+			{profile.kycLevel === "ONE" && (
+				<section>
+					<Start
+						open={openModal}
+						setOpen={closeModal}
+						setKycProgress={IncreaseKycProgress}
+						kycProgress={kycScreen}
+						reverseKycProgress={reduceKycProgress}
+					/>
+				</section>
+			)}
 
 			{kycScreen === 0 && (
 				<>
@@ -134,6 +132,7 @@ const Client = ({ exchangeRate: { data }, profile, transactions }: Props) => {
 										it&apos;s not your Bitcoin until you self-custody it.
 									</p>
 									<CurrencyInput
+										disableInput={profile.kycLevel === "ONE"}
 										amount={fields.amount}
 										currency={fields.currency}
 										inputName="amount"
@@ -157,10 +156,15 @@ const Client = ({ exchangeRate: { data }, profile, transactions }: Props) => {
 									<Button
 										type="button"
 										onClick={handleSubmit2}
-										width="w-full bg-black-600">
+										width="w-full bg-black-600"
+										disabled={profile.kycLevel === "ONE"}>
 										Generate Payment Link
 									</Button>
-									<Button type="button" onClick={handleSubmit1} width="w-full">
+									<Button
+										type="button"
+										disabled={profile.kycLevel === "ONE"}
+										onClick={handleSubmit1}
+										width="w-full">
 										Buy Now
 									</Button>
 								</div>

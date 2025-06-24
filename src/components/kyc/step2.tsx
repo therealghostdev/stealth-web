@@ -7,22 +7,16 @@ import type { Step2Props } from "@/types/kyc"
 import * as faceapi from "face-api.js"
 import { motion } from "framer-motion"
 import * as tf from "@tensorflow/tfjs-core"
-import { useQuery } from "@tanstack/react-query"
+import { useMutation } from "@tanstack/react-query"
 import { verifyface } from "@/config/preambly"
 import Spinner from "../spinner"
 import CustomDialog from "../dialog"
 
 export default function Step2({
-	submitInfo,
-	setKycprogress,
 	updateKycForm,
 	formError,
 	updateFormErrors,
 	formValues,
-	accountName,
-	bvnVerified,
-	genderVerified,
-	bvnFailed,
 }: Step2Props) {
 	const videoRef = useRef<HTMLVideoElement>(null)
 	const [stream, setStream] = useState<MediaStream | null>(null)
@@ -189,6 +183,7 @@ export default function Step2({
 								value: file,
 							},
 						} as any)
+						mutate({ image: file, bvn: formValues.Bvn })
 
 						// Cleanup camera
 						if (stream) {
@@ -229,33 +224,28 @@ export default function Step2({
 		}
 	}, [formValues.faceCard])
 
-	const { isLoading, data, isError } = useQuery({
-		queryKey: ["face_liveness_verification", formValues.faceCard],
-		queryFn: () => verifyface({ faceCard: image }),
-		enabled:
-			!!genderVerified &&
-			!!bvnVerified &&
-			accountName !== "" &&
-			!accountName.includes("Account") &&
-			formValues.faceCard !== null &&
-			image !== null,
+	const { mutate, data, isPending } = useMutation({
+		mutationFn: async ({ image, bvn }: { image: File; bvn: string }) =>
+			await verifyface({ image, bvn }),
+		onSuccess: (data) => {
+			if (data?.status) {
+				setOpen(true)
+			}
+		},
+		onError: (err) => {
+			console.error("Error:", err)
+		},
 	})
 
 	useEffect(() => {
-		if (
-			data?.data?.response_code === "01" ||
-			data?.data?.response_code === "00"
-		) {
+		if (data?.status) {
 			setOpen(true)
 		}
 	}, [data])
 
 	const handleModal = (value: boolean) => {
 		setOpen(value)
-		if (
-			data?.data?.response_code === "01" ||
-			data?.data?.response_code === "00"
-		) {
+		if (data?.status?.toLowerCase() === "verified") {
 			setTimeout(() => window.location.reload(), 2000)
 		}
 	}
@@ -274,7 +264,7 @@ export default function Step2({
 					</div>
 				)}
 
-				{!isLoading && (
+				{!isPending && (
 					<>
 						<div className="relative flex min-h-[400px] items-center justify-center">
 							<div className="flex min-h-[200px] min-w-[200px] items-center justify-center overflow-hidden rounded-3xl border border-[#494949] px-8 py-12">
@@ -341,23 +331,23 @@ export default function Step2({
 					</>
 				)}
 
-				{isLoading && (
+				{isPending && (
 					<div className="flex h-[100px] w-full items-center justify-center">
 						<Spinner />
 					</div>
 				)}
 			</div>
 
-			{!isLoading && open && (
+			{!isPending && open && (
 				<div className="z-50">
 					<CustomDialog
 						isOpen={open}
 						onDismiss={() => handleModal(false)}
-						title={`${
-							data?.data?.response_code === "00"
-								? "Kyc verification Successful"
-								: "Kyc Verification Failed"
-						}`}></CustomDialog>
+						title={
+							data?.status?.toLowerCase() === "verified"
+								? "Congratulations your kyc verification was successful 🎉"
+								: " 😔 KYC verification failed, try again or contact support for more details if problem persists"
+						}></CustomDialog>
 				</div>
 			)}
 		</section>
