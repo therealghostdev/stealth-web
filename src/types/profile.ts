@@ -18,6 +18,7 @@ export type UserProps = {
 	lastName: string
 	email: string
 	imageUrl: string | null
+	kycLevel: string | null
 	activated: boolean
 	langKey: string
 	createdBy: string

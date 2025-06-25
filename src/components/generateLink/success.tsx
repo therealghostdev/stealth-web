@@ -26,8 +26,8 @@ const Success = (props: Props) => {
 			</div>
 			<p className="font-satoshi text-4xl font-bold">Successful</p>
 			<p className="my-4 text-center text-xl text-black-300">
-				Your payment link as been generated successful. Copy and send to third party
-				to purchase Bitcoin into your wallet.
+				Your payment link has been generated successful. Copy and send to third
+				party to purchase Bitcoin into your wallet.
 			</p>
 
 			<div className="mt-20 w-full">

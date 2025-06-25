@@ -1,11 +1,12 @@
 "use client"
 import { useRouter, useSearchParams } from "next/navigation"
-import { useEffect, useState } from "react"
+import { useEffect, useState, Suspense } from "react"
 import Link from "next/link"
 
 import { Button, Dialog, Input, Spinner } from "@/components"
 
-const Page = () => {
+// Create a component for the form content that uses useSearchParams
+const ResetPasswordForm = () => {
 	const searchParams = useSearchParams()
 	const key = searchParams.get("key")
 	const router = useRouter()
@@ -21,7 +22,8 @@ const Page = () => {
 	const handleChange = (e: React.ChangeEvent<HTMLInputElement>) =>
 		setFormFields({ ...formFields, [e.target.name]: e.target.value })
 
-	const handleSubmit = async () => {
+	const handleSubmit = async (e: React.FormEvent) => {
+		e.preventDefault()
 		try {
 			setLoading(true)
 			const res = await fetch(`/api/finish-reset`, {
@@ -99,6 +101,22 @@ const Page = () => {
 				</form>
 			</div>
 		</>
+	)
+}
+
+// Loading fallback component
+const LoadingFallback = () => (
+	<div className="flex h-full w-full items-center justify-center">
+		<Spinner />
+	</div>
+)
+
+// Main page component that wraps the form with Suspense
+const Page = () => {
+	return (
+		<Suspense fallback={<LoadingFallback />}>
+			<ResetPasswordForm />
+		</Suspense>
 	)
 }
 

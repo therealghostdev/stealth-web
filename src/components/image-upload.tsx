@@ -48,6 +48,7 @@ const ImageUpload = (props: Props) => {
 				<div className="h-full w-full overflow-hidden">
 					<label htmlFor="image-upload">
 						<input
+							placeholder="upload image"
 							type="file"
 							id="image-upload"
 							accept="image/*"

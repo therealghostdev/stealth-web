@@ -1,5 +1,5 @@
 "use client"
-import { Bell, SignOut } from "@phosphor-icons/react"
+import { Bell, Power } from "@phosphor-icons/react"
 import { usePathname } from "next/navigation"
 import { signOut } from "next-auth/react"
 import { useEffect, useState } from "react"
@@ -59,7 +59,7 @@ const DashboardLayoutClient = ({
 	return (
 		<>
 			<div
-				className="fixed left-4 top-4 z-50 flex items-center justify-center md:hidden"
+				className="fixed left-4 top-4 z-[60] flex items-center justify-center md:hidden"
 				onClick={toggleMobileNav}>
 				{!showMobileNav ? (
 					<TextAlignJustifyIcon width={40} height={40} color="white" />
@@ -88,7 +88,7 @@ const DashboardLayoutClient = ({
 			</Dialog>
 			<main className="flex h-screen w-screen items-start overflow-hidden bg-black-100 text-white-100">
 				<div
-					className={`fixed left-0 top-0 ${
+					className={`fixed left-0 top-0 z-50 ${
 						!showMobileNav ? "hidden" : "flex"
 					} h-full w-full flex-col justify-between border-r border-black-500 bg-black-100 p-6 md:static md:flex md:w-1/5`}>
 					<div className="flex w-full flex-col gap-12">
@@ -114,17 +114,23 @@ const DashboardLayoutClient = ({
 					<button
 						onClick={() => setIsOpen(true)}
 						className="flex items-center gap-2 rounded-lg p-3 font-satoshi font-medium text-red-800 transition-all duration-300 hover:bg-red-800 hover:text-white-100">
-						<SignOut size={24} /> Log Out
+						<Power size={24} /> Log Out
 					</button>
 				</div>
 				<div className="flex h-full w-4/5 flex-1 flex-col">
 					<div className="flex w-full items-center justify-end border-b border-black-500 p-6 md:justify-between">
-						<p className="hidden font-satoshi text-xl font-bold md:flex">Dashboard</p>
-						<div className="flex items-center gap-5">
-							<button className="rounded-full border p-2">
+						<div className="flex w-full items-center justify-end gap-5">
+							<button title="notification" className="rounded-full border p-2">
 								<Bell />
 							</button>
 							<NavButton user={user} />
+							<button
+								title="logout"
+								type="button"
+								onClick={() => setIsOpen(true)}
+								className="flex items-center gap-2 rounded-lg p-3 font-satoshi font-medium text-red-800 transition-all duration-300 hover:bg-red-800 hover:text-white-100">
+								<Power size={24} />
+							</button>
 						</div>
 					</div>
 					<div className="w-full overflow-y-auto p-6">{children}</div>

@@ -15,7 +15,7 @@ import { useRouter } from "next/navigation"
 const CurrencyList = ["NGN", "USD"]
 const weeklyintervalOptions = ["weekly", "daily", "monthly"]
 const monthlyintervalOptions = ["3months", "6months", "1year"]
-export default function Create({ exchangeRate }: any) {
+export default function Create({ exchangeRate, profile }: any) {
 	const router = useRouter()
 	const [createPlan, setCreatePlan] = useState(false)
 	const [noFeat, setNoFeat] = useState(false)
@@ -137,6 +137,7 @@ export default function Create({ exchangeRate }: any) {
 								Learn more
 							</button>
 							<button
+								disabled={profile?.kycLevel === "ONE"}
 								onClick={openCreatePlan}
 								className="mx-2 flex items-center justify-center rounded-md border border-[#FAB766] bg-[#F7931A] px-4 py-2">
 								<span className="mx-1">
