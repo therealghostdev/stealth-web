@@ -155,7 +155,7 @@ const Client = ({ exchangeRate: { data }, profile, transactions }: Props) => {
 										it&apos;s not your Bitcoin until you self-custody it.
 									</p>
 									<CurrencyInput
-										// disableInput={profile.kycLevel === "ONE"}
+										disableInput={profile.kycLevel === "ONE"}
 										amount={displayAmount}
 										currency={fields.currency}
 										inputName="amount"
@@ -187,11 +187,10 @@ const Client = ({ exchangeRate: { data }, profile, transactions }: Props) => {
 										type="button"
 										onClick={handleSubmit2}
 										width="w-full bg-black-600"
-										// disabled={
-										// 	profile.kycLevel === "ONE" ||
-										// 	(profile.kycLevel === "TWO" && Number(fields.amount) > 5000000)
-										// }>
-										>
+										disabled={
+											profile.kycLevel === "ONE" ||
+											(profile.kycLevel === "TWO" && Number(fields.amount) > 5000000)
+										}>
 										Generate Payment Link
 									</Button>
 									<Button
