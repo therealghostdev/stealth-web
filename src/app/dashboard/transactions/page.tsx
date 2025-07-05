@@ -1,8 +1,9 @@
 import TransactionsTable from "@/components/transactions-table"
 import Form from "./form"
 import { getAllPaymentDetails } from "@/app/helpers/get-price"
+import FilteredTransactions from "./filteredTransactions"
 
-const Page = async () => {
+export default async function Page() {
 	const transactionsRes = await getAllPaymentDetails()
 
 	if (transactionsRes instanceof Error) {
@@ -15,15 +16,6 @@ const Page = async () => {
 			</div>
 		)
 	}
-	return (
-		<div className="h-4/5 w-full">
-			<div className="mb-6 flex w-full flex-col items-center justify-between lg:flex-row">
-				<p className="font-satoshi text-2xl font-bold capitalize">Transactions</p>
-				<Form />
-			</div>
-			<TransactionsTable transactions={transactionsRes.data} />
-		</div>
-	)
-}
 
-export default Page
+	return <FilteredTransactions initialTransactions={transactionsRes.data} />
+}

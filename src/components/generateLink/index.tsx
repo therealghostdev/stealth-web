@@ -10,6 +10,7 @@ interface Props {
 	amount: string
 	currency: string
 	exchangeRate: ExchangeRateProps["data"]
+	dismiss: () => void
 }
 
 export interface Fields {
@@ -57,6 +58,7 @@ const GeneratePayLink = (props: Props) => {
 					}
 					setGeneratedLink={setGeneratedLink}
 					next={() => setScreen("success")}
+					close={() => props.dismiss()}
 				/>
 			)}
 			{screen === "success" && <Success generatedLink={generatedLink} />}
