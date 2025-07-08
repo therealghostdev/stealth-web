@@ -104,7 +104,7 @@ const Init = (props: Props) => {
 			</button>
 			<p className="font-satoshi text-[28px] font-medium">Instant Buy</p>
 			<p className="text-lg text-black-400">
-				Please enter narration and your wallet address correctly
+				Please enter description and your wallet address correctly
 			</p>
 			<div className="my-8 flex w-full flex-col">
 				<div
@@ -171,10 +171,10 @@ const Init = (props: Props) => {
 			<div className="mb-10 mt-6">
 				<Input
 					typed="text"
-					name="Description"
+					name="narration"
 					value={fields.narration}
 					onChange={handleChange}
-					label="Narration"
+					label="Description"
 				/>
 			</div>
 			<div className="pb-10">

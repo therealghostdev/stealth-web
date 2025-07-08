@@ -169,10 +169,10 @@ const LinkGenerateInit = (props: Props) => {
 			<div className="mb-10 mt-6">
 				<Input
 					typed="text"
-					name="description"
+					name="narration"
 					value={fields.narration}
 					onChange={handleChange}
-					label="Narration"
+					label="description"
 				/>
 			</div>
 			<div className="pb-10">

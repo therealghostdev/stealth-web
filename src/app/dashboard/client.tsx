@@ -187,10 +187,7 @@ const Client = ({ exchangeRate: { data }, profile, transactions }: Props) => {
 										type="button"
 										onClick={handleSubmit2}
 										width="w-full bg-black-600"
-										disabled={
-											profile.kycLevel === "ONE" ||
-											(profile.kycLevel === "TWO" && Number(fields.amount) > 5000000)
-										}>
+										disabled={true}>
 										Generate Payment Link
 									</Button>
 									<Button
