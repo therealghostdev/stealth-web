@@ -38,12 +38,12 @@ export default TransactionsTable
 
 export const TableHead = () => (
 	<div className="hidden w-full items-center gap-1 border-b px-2 py-5 lg:flex">
-		<p className="w-[100px]">No.</p>
-		<p className="flex flex-1">Date</p>
-		<p className="flex flex-1">Amount</p>
-		<p className="flex flex-1">Value (BTC)</p>
-		<p className="flex flex-1">Wallet Address</p>
-		<p className="flex flex-1">Status</p>
+		<p className="w-[40%]">No.</p>
+		<p className="flex lg:w-[80%]">Date</p>
+		<p className="flex lg:w-[80%]">Amount</p>
+		<p className="flex lg:w-[80%]">Value (BTC)</p>
+		<p className="flex lg:w-[80%]">Wallet Address</p>
+		<p className="flex lg:w-[80%]">Status</p>
 	</div>
 )
 
@@ -57,7 +57,9 @@ export const TableBody = ({
 	return (
 		<>
 			<Dialog isOpen={!!selected} onDismiss={() => setSelected(null)}>
-				{selected && <TransactionItem transaction={selected} />}
+				{selected && (
+					<TransactionItem transaction={selected} close={() => setSelected(null)} />
+				)}
 			</Dialog>
 			<div className="w-full overflow-y-auto">
 				{!transactions.length ? (
@@ -77,22 +79,22 @@ export const TableBody = ({
 									onClick={() => setSelected(transaction)}
 									className="hover my-5 flex w-full cursor-pointer flex-col gap-1 rounded-md bg-[#191919] px-2 py-4 transition-all hover:bg-black-600 lg:my-auto lg:flex-row lg:items-center lg:rounded-none lg:bg-[transparent]">
 									<div className="flex w-full">
-										<div className="flex w-2/4 flex-col lg:w-full lg:flex-row">
-											<div className="hidden lg:flex lg:w-[100px]">{index + 1}</div>
-											<div className="flex flex-1">
+										<div className="flex flex-col lg:w-[80%] lg:flex-row">
+											<div className="hidden lg:flex lg:w-[40%]">{index + 1}</div>
+											<div className="flex lg:w-[80%]">
 												{formatDate(new Date(transaction?.createdDate))}
 											</div>
-											<div className="flex flex-1">
+											<div className="flex lg:w-[80%]">
 												{formatCurrency(+transaction?.amountDue || 0)}
 											</div>
-											<div className="flex flex-1">
+											<div className="flex lg:w-[80%]">
 												{(Number(transaction?.amountInSats) / SATS_PER_BTC || 0).toFixed(8)}
 											</div>
-											<div className="flex flex-1">
+											<div className="flex lg:w-[80%]">
 												{formatBtcAddress(transaction.walletAddress ?? "")}
 											</div>
 										</div>
-										<div className="w-2/4 lg:flex lg:w-1/4 lg:flex-1">
+										<div className="w-full justify-end lg:flex lg:w-[10%] lg:justify-end">
 											<div className="flex items-baseline justify-end">
 												<p
 													className={`w-fit rounded p-1 text-[10px] capitalize ${

@@ -12,6 +12,7 @@ interface Props {
 	amount: string
 	currency: string
 	exchangeRate: ExchangeRateProps["data"]
+	dismiss: () => void
 }
 
 export type PaymentDetails = Pick<
@@ -74,6 +75,7 @@ const InstantBuy = (props: Props) => {
 						setFields({ ...fields, amountInSats: value })
 					}
 					next={() => setScreen("payment")}
+					close={() => props.dismiss()}
 				/>
 			)}
 			{screen === "payment" && (
@@ -82,6 +84,7 @@ const InstantBuy = (props: Props) => {
 					depositInfo={depositInfo}
 					next={() => setScreen("processing")}
 					previous={() => setScreen("init")}
+					close={() => props.dismiss()}
 					paymentState={paymentState}
 					setPaymentState={setPaymentState}
 				/>

@@ -7,6 +7,7 @@ import { formatTime } from "@/app/helpers/time"
 import { Button } from ".."
 import { confirmPayment } from "@/app/helpers/get-price"
 import { PaymentStatusProps } from "@/types/price"
+import { Cross1Icon } from "@radix-ui/react-icons"
 
 interface Props {
 	amount: string
@@ -23,6 +24,7 @@ interface Props {
 	setPaymentState: (state: string) => void
 	next: () => void
 	previous: () => void
+	close: () => void
 }
 
 export const Payment = (props: Props) => {
@@ -54,8 +56,6 @@ export const Payment = (props: Props) => {
 				(data.paymentState === "ALREADY_PROCESSED" && timer < 1)
 			) {
 				props.setPaymentState(data.paymentState)
-				console.log("payment-state can proceed")
-				console.log("payment-state", data.paymentState)
 				props.next()
 			}
 		} catch (error) {
@@ -83,6 +83,13 @@ export const Payment = (props: Props) => {
 
 	return (
 		<div className="h-full w-full">
+			<button
+				type="button"
+				onClick={props.close}
+				className="hover:text-white absolute right-4 top-4 text-red-100"
+				aria-label="Close">
+				<Cross1Icon fontSize={32} />
+			</button>
 			<p className="font-satoshi text-[28px] font-medium">Make Payment</p>
 			<p className="text-lg text-black-400">
 				Make payment into the account details provided below.
