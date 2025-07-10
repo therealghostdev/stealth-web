@@ -168,6 +168,7 @@ export default function Create({ exchangeRate, profile }: any) {
 										amount={buyPrice}
 										currency={formData.currency}
 										exchangeRate={exchangeRate.data}
+										dismiss={closeModal}
 									/>
 								) : (
 									<p>Error fetching exchange rate data</p>

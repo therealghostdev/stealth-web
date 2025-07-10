@@ -13,8 +13,9 @@ import { UserProps } from "@/types/profile"
 import Image from "next/image"
 import GeneratePayLink from "@/components/generateLink"
 import Start from "@/components/kyc/start"
+import { formatAmountForDisplay } from "@/shared/functions"
 
-const CurrencyList = ["NGN", "USD"]
+const CurrencyList = ["NGN"] // just ngn for now
 
 interface Props {
 	exchangeRate: ExchangeRateProps
@@ -28,18 +29,35 @@ const Client = ({ exchangeRate: { data }, profile, transactions }: Props) => {
 	const [openGenerateModal, setOpenGenerateModal] = useState(false)
 	const [error, setError] = useState("")
 	const [kycScreen, setKycScreen] = useState<0 | 1 | 2 | 3>(0)
+	const [displayAmount, setDisplayAmount] = useState("")
 
 	const displayName = profile.firstName
 		? profile.firstName
 		: profile.email.split("@")[0]
 
+	useEffect(() => {
+		setDisplayAmount(formatAmountForDisplay(fields.amount))
+	}, [fields.amount])
+
 	const handleChange = (
 		e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
-	) => setFields({ ...fields, [e.target.name]: e.target.value })
+	) => {
+		const { name, value } = e.target
+
+		if (name === "amount") {
+			const cleanValue = value.replace(/\D/g, "")
+			setFields({ ...fields, [name]: cleanValue })
+			return
+		}
+		setFields({ ...fields, [name]: value })
+	}
 
 	const handleSubmit1 = async () => {
 		const { amount } = fields
-		if (Number(amount) <= 0) {
+
+		const cleanAmount = amount.replace(/[^\d]/g, "")
+
+		if (Number(cleanAmount) <= 0) {
 			return setError("Please enter an amount greater than 0!")
 		}
 		//checks if the amount includes only integers to avoid exponential notation e.g 3.9e10
@@ -51,7 +69,10 @@ const Client = ({ exchangeRate: { data }, profile, transactions }: Props) => {
 
 	const handleSubmit2 = async () => {
 		const { amount } = fields
-		if (Number(amount) <= 0) {
+
+		const cleanAmount = amount.replace(/[^\d]/g, "")
+
+		if (Number(cleanAmount) <= 0) {
 			return setError("Please enter an amount greater than 0!")
 		}
 		//checks if the amount includes only integers to avoid exponential notation e.g 3.9e10
@@ -109,6 +130,7 @@ const Client = ({ exchangeRate: { data }, profile, transactions }: Props) => {
 							amount={fields.amount}
 							currency={fields.currency}
 							exchangeRate={data}
+							dismiss={closeModal}
 						/>
 					</Dialog>
 
@@ -117,6 +139,7 @@ const Client = ({ exchangeRate: { data }, profile, transactions }: Props) => {
 							amount={fields.amount}
 							currency={fields.currency}
 							exchangeRate={data}
+							dismiss={closeModal}
 						/>
 					</Dialog>
 					<div className="flex w-full flex-col gap-6">
@@ -133,7 +156,7 @@ const Client = ({ exchangeRate: { data }, profile, transactions }: Props) => {
 									</p>
 									<CurrencyInput
 										disableInput={profile.kycLevel === "ONE"}
-										amount={fields.amount}
+										amount={displayAmount}
 										currency={fields.currency}
 										inputName="amount"
 										label="Enter Amount"
@@ -147,6 +170,13 @@ const Client = ({ exchangeRate: { data }, profile, transactions }: Props) => {
 											</option>
 										))}
 									</CurrencyInput>
+									{Number(fields.amount) > 5000000 &&
+										(profile.kycLevel === "ONE" || profile.kycLevel === "TWO") && (
+											<p className="flex items-center gap-1 text-xs text-red-100">
+												<WarningCircle className="text-red-100" />
+												Upgrade your KYC to buy BTC above 5M.
+											</p>
+										)}
 									<p className="flex items-center gap-1 text-xs text-black-400">
 										<WarningCircle className="text-alt-orange-100" />
 										Exchange rate: 1 BTC = {formatCurrency(data.pricePerBtc)}
@@ -157,12 +187,15 @@ const Client = ({ exchangeRate: { data }, profile, transactions }: Props) => {
 										type="button"
 										onClick={handleSubmit2}
 										width="w-full bg-black-600"
-										disabled={profile.kycLevel === "ONE"}>
+										disabled={true}>
 										Generate Payment Link
 									</Button>
 									<Button
 										type="button"
-										disabled={profile.kycLevel === "ONE"}
+										disabled={
+											profile.kycLevel === "ONE" ||
+											(profile.kycLevel === "TWO" && Number(fields.amount) > 5000000)
+										}
 										onClick={handleSubmit1}
 										width="w-full">
 										Buy Now
@@ -171,7 +204,7 @@ const Client = ({ exchangeRate: { data }, profile, transactions }: Props) => {
 							</div>
 							<div className="hidden h-full items-center justify-center rounded-lg border border-black-500 bg-black-700 p-6 md:col-span-2 md:flex lg:col-span-3">
 								<Image
-									src="/dashboard_stealth_large.png"
+									src="/new_right_dashboard_stealth.png"
 									alt="Market Summary"
 									width={500}
 									height={120}

@@ -11,9 +11,11 @@ import { formatCurrency } from "@/app/helpers/amount"
 import { formatLongDate } from "@/app/helpers/time"
 import { PaymentDetail } from "@/types/price"
 import { SATS_PER_BTC } from "@/config/constants"
+import { Cross1Icon } from "@radix-ui/react-icons"
 
 interface Props {
 	transaction: PaymentDetail
+	close: () => void
 }
 
 const StatusColor = {
@@ -36,9 +38,16 @@ const StatusIcon = {
 	FAILED: <WarningCircle className="text-9xl text-red-100" weight="fill" />,
 }
 
-const TransactionItem = ({ transaction }: Props) => {
+const TransactionItem = ({ transaction, close }: Props) => {
 	return (
 		<div className="flex w-full flex-col items-center gap-5">
+			<button
+				type="button"
+				onClick={close}
+				className="hover:text-white absolute right-4 top-4 text-red-100"
+				aria-label="Close">
+				<Cross1Icon fontSize={32} />
+			</button>
 			{StatusIcon[transaction.paymentState]}
 			<p className="text-xl text-white-300">You purchased</p>
 			<p className="text-[28px] text-white-100">
