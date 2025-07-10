@@ -166,7 +166,10 @@ const Init = (props: Props) => {
 						</button>
 					}
 				/>
-				<p className="text-xs">Please paste in your wallet address here</p>
+				<p className="text-xs">
+					Please paste in your wallet address here. (Avoid reusing the same address
+					for privacy reasons)
+				</p>
 			</div>
 			<div className="mb-10 mt-6">
 				<Input
