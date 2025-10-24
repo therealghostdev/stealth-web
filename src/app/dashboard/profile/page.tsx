@@ -5,12 +5,13 @@ import { Authentication, Profile, Security } from "@/components/profile"
 import { Spinner, TabPanel } from "@/components"
 import { UserProps } from "@/types/profile"
 import { getProfile } from "@/app/helpers/get-profile"
+import Xpub from "@/components/profile/x-pub"
 
-const TabList = ["Profile", "Security Settings", "2-FA"]
+const TabList = ["Profile", "Xpub Settings", "Security Settings", "2-FA"]
 
 const Page = () => {
 	const [user, setUser] = useState<UserProps | null>(null)
-	const [tab, setTab] = useState(0)
+	const [tab, setTab] = useState(1)
 
 	useEffect(() => {
 		const getUser = async () => {
@@ -48,9 +49,12 @@ const Page = () => {
 					<Profile {...user} />
 				</TabPanel>
 				<TabPanel tabIndex={1} index={tab}>
-					<Security {...user} />
+					<Xpub {...user} />
 				</TabPanel>
 				<TabPanel tabIndex={2} index={tab}>
+					<Security {...user} />
+				</TabPanel>
+				<TabPanel tabIndex={3} index={tab}>
 					<Authentication {...user} />
 				</TabPanel>
 			</div>

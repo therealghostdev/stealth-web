@@ -33,4 +33,5 @@ export type UserProps = {
 		bankName: string
 		status: string
 	}
+	physicalWallets: []
 }
