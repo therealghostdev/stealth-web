@@ -12,18 +12,24 @@ import { validateWalletAddress } from "@/app/helpers/address"
 import { PaymentDetails } from "."
 import { formatAmountForDisplay } from "@/shared/functions"
 import { Cross1Icon } from "@radix-ui/react-icons"
+import CustomSwitch from "../shared/switch"
+import { UserProps } from "@/types/profile"
 
 interface Props {
+	paymentConfig: UserProps["physicalWallets"] | []
 	exchangeRate: ExchangeRateProps["data"]
 	fields: {
 		amount: string
 		currency: string
 		amountInSats: string
-		narration?: string
-		walletAddress: string
+		walletAddress?: string
+		walletId?: string
+		usexpub: boolean
 	}
 	handleChange: (
-		e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+		e:
+			| React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+			| { target: { name: string; value: boolean } }
 	) => void
 	pasteWalletAddress: () => void
 	setAmountInSats: (value: string) => void
@@ -43,17 +49,17 @@ const Init = (props: Props) => {
 	const { fields, handleChange } = props
 
 	const handleSubmit = async () => {
-		const { amount, amountInSats, narration, walletAddress } = fields
+		const { amount, amountInSats, walletAddress, usexpub } = fields
 		if (!amount) {
 			return alert("Please enter amount!")
 		}
-		if (!walletAddress) {
+		if (!walletAddress && !usexpub) {
 			return alert("Please enter wallet address!")
 		}
 		setLoading(true)
 		try {
-			const isValidAddress = validateWalletAddress(walletAddress)
-			if (!isValidAddress) {
+			const isValidAddress = walletAddress && validateWalletAddress(walletAddress)
+			if (!isValidAddress && walletAddress) {
 				setError("Invalid wallet address!")
 				setLoading(false)
 				return
@@ -61,8 +67,9 @@ const Init = (props: Props) => {
 			const res = await getPaymentDetails({
 				amount: Number(amount),
 				amountInSats,
-				walletAddress,
-				narration,
+				...(fields.usexpub
+					? { walletId: String(props.paymentConfig[0]?.id) }
+					: { walletAddress: fields.walletAddress }),
 			})
 			if (res instanceof Error) {
 				setError(res.message)
@@ -150,36 +157,74 @@ const Init = (props: Props) => {
 					Exchange rate: 1BTC = {formatCurrency(props.exchangeRate.pricePerBtc)}
 				</p>
 			</div>
-			<div className="my-6">
-				<Input
-					typed="text"
-					name="walletAddress"
-					value={fields.walletAddress}
-					onChange={handleChange}
-					label="Wallet Address"
-					pasteBtn={
-						<button
-							type="button"
-							onClick={props.pasteWalletAddress}
-							className="flex items-center gap-1 px-2 text-xs uppercase text-green-100">
-							paste <Copy size={14} />
-						</button>
-					}
-				/>
-				<p className="text-xs">
-					Please paste in your wallet address here. (Avoid reusing the same address
-					for privacy reasons)
-				</p>
+			{props.paymentConfig.length > 0 && (
+				<>
+					<div className="flex w-full items-center justify-between">
+						<div className="flex items-center gap-x-2">
+							<span>Use Xpub keys</span>
+							<span>
+								<WarningCircle className="text-alt-orange-100" />
+							</span>
+						</div>
+						<div>
+							<CustomSwitch
+								checked={fields.usexpub}
+								onCheckedChange={(checked) =>
+									handleChange({
+										target: { name: "usexpub", value: checked },
+									})
+								}
+							/>
+						</div>
+					</div>
+				</>
+			)}
+			<div className="relative my-6 mb-12 min-h-[100px]">
+				<div
+					className={`absolute inset-0 transition-all duration-300 ease-in-out ${
+						fields.usexpub
+							? "pointer-events-none translate-y-2 opacity-0"
+							: "translate-y-0 opacity-100"
+					}`}>
+					<Input
+						typed="text"
+						name="walletAddress"
+						value={fields.walletAddress}
+						onChange={handleChange}
+						label="Wallet Address"
+						pasteBtn={
+							<button
+								type="button"
+								onClick={props.pasteWalletAddress}
+								className="flex items-center gap-1 px-2 text-xs uppercase text-green-100">
+								paste <Copy size={14} />
+							</button>
+						}
+					/>
+					<p className="text-xs">
+						Please paste in your wallet address here. (Avoid reusing the same address
+						for privacy reasons)
+					</p>
+				</div>
+
+				<div
+					className={`absolute inset-0 transition-all duration-300 ease-in-out ${
+						fields.usexpub
+							? "translate-y-0 opacity-100"
+							: "pointer-events-none -translate-y-2 opacity-0"
+					}`}>
+					<p className="text-white" aria-label="x-pub-key">
+						Xpub key <span className="text-[#B31919]">*</span>
+					</p>
+					<div className="flex flex-col gap-y-2 rounded-md border border-[#494949] bg-[#2B2B2B] px-2 py-5">
+						<small className="text-[14px] text-[#AAAAAA]">
+							{props.paymentConfig[0]?.alias}
+						</small>
+						<small className="text-[16px]">{props.paymentConfig[0]?.xpubKey}</small>
+					</div>
+				</div>
 			</div>
-			<div className="mb-10 mt-6">
-				<Input
-					typed="text"
-					name="narration"
-					value={fields.narration}
-					onChange={handleChange}
-					label="Description"
-				/>
-			</div>
+
 			<div className="pb-10">
 				<Button
 					type="button"

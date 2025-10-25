@@ -19,6 +19,7 @@ interface Props {
 		feeAmount: string
 		amountDue: string
 		amountInSats: string
+		narration: string
 	}
 	paymentState: string
 	setPaymentState: (state: string) => void
@@ -138,6 +139,12 @@ export const Payment = (props: Props) => {
 					<p className={`${timer > 0 ? "text-green-500" : "text-red-500"}`}>
 						{formatTime(timer)}
 					</p>
+				</div>
+			</div>
+			<div className="mb-20 mt-12 w-full">
+				<div className="flex flex-col gap-y-2 w-full text-xl font-medium border border-[#2B2B2B] rounded-md py-2 px-4">
+					<p className="text-[#AAAAAA] text-[14px]">Use this narration please:</p>
+					<p className="text-[16px] text-white-100">{depositInfo.narration}</p>
 				</div>
 			</div>
 			<div className="grid w-full grid-cols-2 gap-3 pb-10">

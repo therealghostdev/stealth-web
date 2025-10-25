@@ -5,10 +5,12 @@ import Processing from "./processing"
 import Success from "./success"
 import Payment from "./payment"
 import Init from "./init"
+import { UserProps } from "@/types/profile"
 
 type BuyState = "init" | "payment" | "processing" | "success"
 
 interface Props {
+	paymentConfig: UserProps["physicalWallets"] | []
 	amount: string
 	currency: string
 	exchangeRate: ExchangeRateProps["data"]
@@ -25,6 +27,7 @@ export type PaymentDetails = Pick<
 	| "amountDue"
 	| "amountInSats"
 	| "amount"
+	| "narration"
 >
 
 const InstantBuy = (props: Props) => {
@@ -41,6 +44,7 @@ const InstantBuy = (props: Props) => {
 		amountDue: "",
 		amountInSats: "",
 		amount: "",
+		narration: "",
 	})
 	const [fields, setFields] = useState({
 		amount: props.amount,
@@ -48,6 +52,8 @@ const InstantBuy = (props: Props) => {
 		amountInSats: "",
 		narration: "",
 		walletAddress: "",
+		walletId: "",
+		usexpub: false,
 	})
 
 	const pasteWalletAddress = async () => {
@@ -59,13 +65,19 @@ const InstantBuy = (props: Props) => {
 	}
 
 	const handleChange = (
-		e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
-	) => setFields({ ...fields, [e.target.name]: e.target.value })
+		e:
+			| React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+			| { target: { name: string; value: boolean } }
+	) => {
+		const { name, value } = e.target
+		setFields({ ...fields, [name]: value })
+	}
 
 	return (
 		<div className="min-h-[70dvh] w-full">
 			{screen === "init" && (
 				<Init
+					paymentConfig={props.paymentConfig}
 					fields={fields}
 					handleChange={handleChange}
 					exchangeRate={props.exchangeRate}
