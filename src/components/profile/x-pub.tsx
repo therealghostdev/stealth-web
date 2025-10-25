@@ -206,7 +206,7 @@ export default function Xpub({
 				</div>
 
 				{physicalWallets.length === 0 ? (
-					<div className="flex w-full items-center justify-center lg:mt-8 mt-24">
+					<div className="mt-24 flex w-full items-center justify-center lg:mt-8">
 						<div className="flex w-2/4 flex-col items-center justify-center gap-8">
 							<div className="h-1/4 w-2/4">
 								<Image
