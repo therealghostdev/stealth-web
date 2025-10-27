@@ -1,7 +1,13 @@
 "use client"
 
 import { ArrowsDownUp, Copy, WarningCircle } from "@phosphor-icons/react"
-import { Dispatch, SetStateAction, useEffect, useState } from "react"
+import {
+	Dispatch,
+	SetStateAction,
+	useCallback,
+	useEffect,
+	useState,
+} from "react"
 
 import { formatCurrency, getCurrencyValue } from "@/app/helpers/amount"
 import { getPaymentDetails } from "@/app/helpers/get-price"
@@ -46,6 +52,7 @@ const Init = (props: Props) => {
 	const [error, setError] = useState("")
 	const [displayAmount, setDisplayAmount] = useState("")
 	const [displayAmount1, setDisplayAmount1] = useState("")
+	const [buttonDisableld, setButtonDisabled] = useState(false)
 	const { fields, handleChange } = props
 
 	const handleSubmit = async () => {
@@ -54,16 +61,12 @@ const Init = (props: Props) => {
 			return alert("Please enter amount!")
 		}
 		if (!walletAddress && !usexpub) {
-			return alert("Please enter wallet address!")
+			setError("Please enter a wallet address")
+			return
 		}
+		setButtonDisabled(false)
 		setLoading(true)
 		try {
-			const isValidAddress = walletAddress && validateWalletAddress(walletAddress)
-			if (!isValidAddress && walletAddress) {
-				setError("Invalid wallet address!")
-				setLoading(false)
-				return
-			}
 			const res = await getPaymentDetails({
 				amount: Number(amount),
 				amountInSats,
@@ -84,6 +87,29 @@ const Init = (props: Props) => {
 			}
 		}
 	}
+
+	const validate = useCallback((value: string) => {
+		const isValidAddress = value && validateWalletAddress(value)
+
+		if (!isValidAddress && value) {
+			setButtonDisabled(true)
+			setError("Invalid wallet address!")
+		} else {
+			setButtonDisabled(false)
+			setError("")
+		}
+	}, [])
+
+	useEffect(() => {
+		const { walletAddress, usexpub } = fields
+
+		if (!usexpub && walletAddress) {
+			validate(walletAddress)
+		} else if (usexpub) {
+			setButtonDisabled(false)
+			setError("")
+		}
+	}, [fields, validate])
 
 	useEffect(() => {
 		const { amountInSats } = getCurrencyValue({
@@ -201,6 +227,7 @@ const Init = (props: Props) => {
 							</button>
 						}
 					/>
+					{error !== "" && <small className="text-[#B31919]">{error}</small>}
 					<p className="text-xs">
 						Please paste in your wallet address here. (Avoid reusing the same address
 						for privacy reasons)
@@ -216,7 +243,7 @@ const Init = (props: Props) => {
 					<p className="text-white" aria-label="x-pub-key">
 						Xpub key <span className="text-[#B31919]">*</span>
 					</p>
-					<div className="flex flex-col gap-y-2 rounded-md border border-[#494949] bg-[#2B2B2B] px-2 py-5">
+					<div className="flex flex-col gap-y-2 rounded-md border border-[#494949] bg-[#2B2B2B] px-2 py-5 font-satoshi">
 						<small className="text-[14px] text-[#AAAAAA]">
 							{props.paymentConfig[0]?.alias}
 						</small>
@@ -229,7 +256,7 @@ const Init = (props: Props) => {
 				<Button
 					type="button"
 					onClick={handleSubmit}
-					disabled={loading}
+					disabled={buttonDisableld}
 					width="w-full">
 					{loading ? <Spinner /> : "Buy Now"}
 				</Button>

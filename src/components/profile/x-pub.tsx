@@ -190,8 +190,10 @@ export default function Xpub({
 			<div className="flex min-h-screen w-full flex-col rounded-md border border-[#494949]">
 				<div className="flex flex-col items-center justify-between gap-y-8 border-b border-b-[#494949] px-6 py-6 md:flex-row md:gap-y-2">
 					<div className="flex flex-col gap-y-2 md:max-w-[50%]">
-						<h1 className="font-bold">Configure your xpub</h1>
-						<small className="text-[#AAAAAA]">
+						<h1 className="font-satoshi text-[16px] font-bold">
+							Configure your xpub
+						</h1>
+						<small className="text-[14px] text-[#AAAAAA]">
 							Your xpub (Extended Public Key) lets you generate multiple Bitcoin
 							addresses from one master key without exposing your private keys.
 						</small>
@@ -225,21 +227,23 @@ export default function Xpub({
 						{physicalWallets?.map((wallet, index) => (
 							<div
 								key={wallet.id}
-								className="flex w-full flex-col items-center justify-between gap-y-6 px-6 py-6 lg:flex-row lg:gap-y-0">
+								className="flex w-full flex-col items-center justify-between gap-y-6 px-6 py-6 font-satoshi lg:flex-row lg:gap-y-0">
 								<div className="flex w-full flex-col gap-y-4 lg:max-w-[50%]">
-									<small className="text-[#aaaaaa]">{wallet.alias}</small>
-									<small className="text-wrap break-words">{wallet.xpubKey}</small>
+									<small className="text-[14px] text-[#aaaaaa]">{wallet.alias}</small>
+									<small className="text-wrap break-words text-[14px]">
+										{wallet.xpubKey}
+									</small>
 								</div>
 
 								<div className="flex w-full justify-end gap-x-3 md:min-w-[50%]">
 									<Button
 										onClick={() => handleOpenPOP("delete", index)}
-										className="rounded-md border border-[#494949] bg-[#000] px-2 py-4 text-[#B31919] md:min-w-[147px]">
+										className="rounded-md border border-[#494949] bg-[#000] px-2 py-4 text-[16px] text-[#B31919] md:min-w-[147px]">
 										Delete xpub
 									</Button>
 									<Button
 										onClick={() => handleOpenPOP("edit", index)}
-										className="flex items-center justify-center rounded-md border border-[#494949] bg-[#2B2B2B] px-2 py-4 md:min-w-[147px]">
+										className="flex items-center justify-center rounded-md border border-[#494949] bg-[#2B2B2B] px-2 py-4 text-[16px] md:min-w-[147px]">
 										<PencilLine size={20} className="mr-2" /> Edit xpub
 									</Button>
 								</div>

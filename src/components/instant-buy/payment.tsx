@@ -142,7 +142,7 @@ export const Payment = (props: Props) => {
 				</div>
 			</div>
 			<div className="mb-20 mt-12 w-full">
-				<div className="flex w-full flex-col gap-y-2 rounded-md border border-[#2B2B2B] px-4 py-2 text-xl font-medium">
+				<div className="flex w-full flex-col gap-y-2 rounded-md border border-[#2B2B2B] px-4 py-2 font-satoshi text-xl font-medium">
 					<p className="text-[14px] text-[#AAAAAA]">Use this narration please:</p>
 					<p className="text-[16px] text-white-100">{depositInfo.narration}</p>
 				</div>
