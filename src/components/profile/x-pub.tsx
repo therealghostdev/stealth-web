@@ -91,7 +91,7 @@ export default function Xpub({
 		} else if (inputState.pubKey === "") {
 			setInputErrorState((prev) => ({
 				...prev,
-				pubKey: "Please add you public key",
+				pubKey: "Please add your public key",
 			}))
 			return
 		} else {
