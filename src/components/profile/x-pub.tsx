@@ -4,7 +4,7 @@ import { xpubInputProp } from "@/types/profile/index"
 import Image from "next/image"
 import Button from "../shared/button"
 import { PencilLine, Copy } from "@phosphor-icons/react"
-import React, { useEffect, useState } from "react"
+import React, { useCallback, useEffect, useState } from "react"
 import CustomDialog from "../dialog"
 import Input from "../shared/input"
 import { WarningOctagon } from "@phosphor-icons/react/dist/ssr"
@@ -25,7 +25,6 @@ export default function Xpub({
 	const [editLoading, setEditLoading] = useState<boolean>(false)
 	const [deleteLoading, setDeleteLoading] = useState<boolean>(false)
 	const [error, setError] = useState("")
-	const [disabled, setDisabled] = useState(false)
 	const [selectedWallet, setSelectedWallet] = useState<
 		UserProps["physicalWallets"][number] | null
 	>(null)
@@ -81,26 +80,44 @@ export default function Xpub({
 		setPopTypeOpen(value)
 	}
 
-	const checkErrors = () => {
-		if (inputState.alias === "") {
+	const checkErrors = useCallback(() => {
+		let hasError = false
+
+		if (inputState.alias.trim() === "") {
 			setInputErrorState((prev) => ({
 				...prev,
 				alias: "Please add your pubkey alias",
 			}))
-			return
-		} else if (inputState.pubKey === "") {
+			hasError = true
+		} else {
+			setInputErrorState((prev) => ({
+				...prev,
+				alias: "",
+			}))
+		}
+
+		if (inputState.pubKey.trim() === "") {
 			setInputErrorState((prev) => ({
 				...prev,
 				pubKey: "Please add your public key",
 			}))
-			return
+			hasError = true
 		} else {
-			setInputErrorState((prev) => ({ ...prev, alias: "", pubKey: "" }))
+			setInputErrorState((prev) => ({
+				...prev,
+				pubKey: "Please add your public key",
+			}))
 		}
-	}
+
+		if (!hasError) {
+			setInputErrorState({ alias: "", pubKey: "" })
+		}
+
+		return !hasError
+	}, [inputState.alias, inputState.pubKey])
 
 	const handleSavenew = async () => {
-		checkErrors()
+		if (!checkErrors()) return
 		try {
 			setLoading(true)
 			const res = await addXpub(inputState)
@@ -120,7 +137,7 @@ export default function Xpub({
 	}
 
 	const handleUpdatekey = async () => {
-		checkErrors()
+		if (!checkErrors()) return
 		try {
 			setEditLoading(true)
 			if (!selectedWallet) return
@@ -171,12 +188,10 @@ export default function Xpub({
 	}
 
 	useEffect(() => {
-		if (inputState.alias !== "" && inputState.pubKey !== "") {
-			setDisabled(false)
-		} else {
-			setDisabled(true)
+		if (inputState.alias !== "" || inputState.pubKey !== "") {
+			checkErrors()
 		}
-	}, [inputState])
+	}, [inputState, checkErrors])
 
 	return (
 		<>
@@ -319,7 +334,6 @@ export default function Xpub({
 												handleUpdatekey()
 											}
 										}}
-										disabled={disabled}
 										textSize="text-sm"
 										className="flex w-1/2 items-center justify-center rounded-md border border-[#494949] bg-alt-orange-100 px-2 py-4 md:min-w-[147px]">
 										{loading || editLoading ? <Spinner /> : "Save Xpub"}
