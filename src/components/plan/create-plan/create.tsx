@@ -11,6 +11,7 @@ import { ExchangeRateProps } from "@/types/price"
 import { WarningCircle } from "@phosphor-icons/react"
 import CustomDialog from "@/components/dialog"
 import { useRouter } from "next/navigation"
+import { UserProps } from "@/types/profile"
 
 const CurrencyList = ["NGN", "USD"]
 const weeklyintervalOptions = ["weekly", "daily", "monthly"]
@@ -28,6 +29,10 @@ export default function Create({ exchangeRate, profile }: any) {
 	})
 	const [error, setError] = useState("")
 	const [errorInstant, setErrorInstant] = useState("")
+
+	const [paymentConfig, setPaymentConfig] = useState<
+		UserProps["physicalWallets"] | []
+	>([])
 
 	const [buyPrice, setBuyPrice] = useState("")
 
@@ -110,6 +115,10 @@ export default function Create({ exchangeRate, profile }: any) {
 		return () => document.removeEventListener("mousedown", clickOutside)
 	}, [])
 
+	useEffect(() => {
+		setPaymentConfig(profile.physicalWallets)
+	}, [profile.physicalWallets])
+
 	return (
 		<section className="flex min-h-screen px-4 py-6">
 			{!createPlan ? (
@@ -165,6 +174,7 @@ export default function Create({ exchangeRate, profile }: any) {
 							<Dialog isOpen={openModal} onDismiss={closeModal}>
 								{exchangeRate && exchangeRate.data ? (
 									<InstantBuy
+										paymentConfig={paymentConfig}
 										amount={buyPrice}
 										currency={formData.currency}
 										exchangeRate={exchangeRate.data}

@@ -30,6 +30,9 @@ const Client = ({ exchangeRate: { data }, profile, transactions }: Props) => {
 	const [error, setError] = useState("")
 	const [kycScreen, setKycScreen] = useState<0 | 1 | 2 | 3>(0)
 	const [displayAmount, setDisplayAmount] = useState("")
+	const [paymentConfig, setPaymentConfig] = useState<
+		UserProps["physicalWallets"] | []
+	>([])
 
 	const displayName = profile.firstName
 		? profile.firstName
@@ -109,6 +112,10 @@ const Client = ({ exchangeRate: { data }, profile, transactions }: Props) => {
 		})
 	}
 
+	useEffect(() => {
+		setPaymentConfig(profile.physicalWallets)
+	}, [profile.physicalWallets])
+
 	return (
 		<>
 			{profile.kycLevel === "ONE" && (
@@ -127,6 +134,7 @@ const Client = ({ exchangeRate: { data }, profile, transactions }: Props) => {
 				<>
 					<Dialog isOpen={openModal} onDismiss={closeModal}>
 						<InstantBuy
+							paymentConfig={paymentConfig}
 							amount={fields.amount}
 							currency={fields.currency}
 							exchangeRate={data}

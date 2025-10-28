@@ -33,4 +33,13 @@ export type UserProps = {
 		bankName: string
 		status: string
 	}
+	physicalWallets:
+		| [
+				{
+					id: number
+					alias: string
+					xpubKey: string
+				},
+		  ]
+		| []
 }

@@ -15,11 +15,11 @@ const nunito = Nunito({
 
 const satoshi = LocalFont({
 	src: [
-		{ path: "../assets/fonts/Satoshi-Light.otf", weight: "300" },
-		{ path: "../assets/fonts/Satoshi-Regular.otf", weight: "400" },
-		{ path: "../assets/fonts/Satoshi-Medium.otf", weight: "500" },
-		{ path: "../assets/fonts/Satoshi-Bold.otf", weight: "700" },
-		{ path: "../assets/fonts/Satoshi-Black.otf", weight: "900" },
+		{ path: "../assets/fonts/satoshi/Satoshi-Light.otf", weight: "300" },
+		{ path: "../assets/fonts/satoshi/Satoshi-Regular.otf", weight: "400" },
+		{ path: "../assets/fonts/satoshi/Satoshi-Medium.otf", weight: "500" },
+		{ path: "../assets/fonts/satoshi/Satoshi-Bold.otf", weight: "700" },
+		{ path: "../assets/fonts/satoshi/Satoshi-Black.otf", weight: "900" },
 	],
 	variable: "--satoshi",
 })
@@ -61,7 +61,7 @@ export default function RootLayout({
 }) {
 	return (
 		<html lang="en">
-			<body className={`${nunito.variable} ${satoshi.variable}`}>
+			<body className={`${nunito.variable} ${satoshi.variable} font-nunito`}>
 				<QueryProvider>
 					<AuthProvider>{children}</AuthProvider>
 				</QueryProvider>
