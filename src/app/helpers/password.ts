@@ -1,7 +1,8 @@
 "use server"
 
 import endpoints from "@/config/endpoints"
-import { auth } from "@/auth"
+import { getAuthHeaders } from "@/shared/functions"
+import { createResponse } from "@/shared/functions"
 
 interface ChangePasswordPayload {
 	currentPassword: string
@@ -9,34 +10,19 @@ interface ChangePasswordPayload {
 }
 
 export const changePassword = async (payload: ChangePasswordPayload) => {
-	const session = await auth()
+	const session = await getAuthHeaders()
 	if (!session) {
-		return {
-			message: "No session found",
-			status: 401,
-			success: false,
-		}
+		return createResponse("No session found", 401, false)
 	}
-	const { accessToken } = session
+
 	const url = endpoints().auth["change-password"]
 	const res = await fetch(url, {
 		method: "POST",
 		body: JSON.stringify(payload),
-		headers: {
-			Authorization: `Bearer ${accessToken}`,
-			"Content-Type": "application/json",
-		},
+		headers: session,
 	})
 	if (!res.ok) {
-		return {
-			message: "Failed to change password!",
-			status: res.status,
-			success: false,
-		}
+		return createResponse("Failed to change password", res.status, false)
 	}
-	return {
-		message: "Password changed successfully!",
-		status: res.status,
-		success: true,
-	}
+	return createResponse("Password changed successfully!", res.status, true)
 }
