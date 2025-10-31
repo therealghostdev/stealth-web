@@ -118,13 +118,17 @@ const Client = ({ exchangeRate: { data }, profile, transactions }: Props) => {
 
 	return (
 		<>
-			{profile.kycInfo.level === "ONE" && (
+			{(profile.kycInfo.level === "ONE" ||
+				((profile.kycInfo.level === "TWO" || profile.kycInfo.level === "THREE") &&
+					profile.physicalWallets.length === 0)) && (
 				<section>
 					<Start
 						open={openModal}
 						setOpen={closeModal}
 						setKycProgress={IncreaseKycProgress}
 						kycProgress={kycScreen}
+						paymentConfig={paymentConfig}
+						kycInfo={profile.kycInfo}
 						reverseKycProgress={reduceKycProgress}
 					/>
 				</section>
@@ -190,7 +194,7 @@ const Client = ({ exchangeRate: { data }, profile, transactions }: Props) => {
 									) : Number(fields.amount) < profile.kycInfo.minAmount ? (
 										<p className="flex items-center gap-1 text-xs text-red-100">
 											<WarningCircle className="text-red-100" />
-											Due to dust transactios, your purchase must be higher than{" "}
+											Due to dust transactions, your purchase must be higher than{" "}
 											{formatDigits(profile.kycInfo.minAmount)}.
 										</p>
 									) : null}

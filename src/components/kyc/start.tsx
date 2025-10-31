@@ -9,6 +9,8 @@ import {
 	Step1ErrorTypes,
 	Step2ErrorTypes,
 } from "@/types/kyc"
+import { UserProps } from "@/types/profile"
+import { useRouter } from "next/navigation"
 
 interface StartPropsTypes {
 	open: boolean
@@ -16,6 +18,8 @@ interface StartPropsTypes {
 	setKycProgress: () => void
 	kycProgress: number
 	reverseKycProgress: () => void
+	paymentConfig: UserProps["physicalWallets"]
+	kycInfo: UserProps["kycInfo"]
 }
 
 export default function Start({
@@ -24,6 +28,8 @@ export default function Start({
 	setKycProgress,
 	kycProgress,
 	reverseKycProgress,
+	paymentConfig,
+	kycInfo,
 }: StartPropsTypes) {
 	const [buttonDisabled, setButtonDisabled] = useState<boolean>(true)
 
@@ -89,6 +95,16 @@ export default function Start({
 		}))
 	}
 
+	const router = useRouter()
+	const handleProfileNavigate = () => {
+		router.push("/dashboard/profile")
+	}
+
+	const shouldShowIntro =
+		(kycInfo.level === "ONE" && kycProgress === 0) ||
+		((kycInfo.level === "TWO" || kycInfo.level === "THREE") &&
+			paymentConfig.length === 0)
+
 	return (
 		<div className="z-0 w-full md:relative">
 			{kycProgress > 0 && (
@@ -102,26 +118,66 @@ gap-x-2 bg-transparent text-[#CCCCCC] md:absolute md:left-0 md:top-0">
 					</button>
 				</div>
 			)}
-			{kycProgress === 0 ? (
+			{shouldShowIntro ? (
 				<section className="my-4 flex w-full flex-col-reverse items-center justify-between rounded-lg border-2 border-red-100 bg-[#0E0E0E] px-2 py-2 md:flex-row md:px-4">
 					<div className="flex w-full flex-col gap-y-4 md:w-3/4 md:max-w-[80%] md:gap-y-2">
-						<h2 className="text-[12px] font-bold lg:text-[24px]">
-							Complete your KYC and Set-up your Account
-						</h2>
+						{shouldShowIntro && (
+							<h2 className="text-[12px] font-bold lg:text-[24px]">
+								{kycInfo.level === "ONE" && kycProgress === 0
+									? "Complete your KYC and Set-up your Account"
+									: (kycInfo.level === "TWO" || kycInfo.level === "THREE") &&
+									  paymentConfig.length === 0
+									? "Add your x-pub key"
+									: ""}
+							</h2>
+						)}
 
-						<p className="text-[15px] text-[#808080] lg:text-[20px]">
-							Please kindly verify your identity and set up your profile to complete
-							the registration process and unlock all features in two easy steps.
-						</p>
+						{shouldShowIntro && (
+							<p className="text-[15px] text-[#808080] lg:text-[20px]">
+								{kycInfo.level === "ONE" && kycProgress === 0
+									? "Please kindly verify your identity and set up your profile to complete the registration process and unlock all features in two easy steps."
+									: (kycInfo.level === "TWO" || kycInfo.level === "THREE") &&
+									  paymentConfig.length === 0
+									? "You can now add your x-pub key in the profile page."
+									: ""}
+							</p>
+						)}
 
-						<div>
-							<button
-								title="complete KYC"
-								className="flex items-center justify-center bg-transparent font-semibold text-orange-100"
-								onClick={setKycProgress}>
-								Complete Registration <ChevronRightIcon />
-							</button>
-						</div>
+						{shouldShowIntro && (
+							<div>
+								<button
+									title={
+										kycInfo.level === "ONE" && kycProgress === 0
+											? "complete KYC"
+											: "Add x-pub key"
+									}
+									className="flex items-center justify-center bg-transparent font-semibold text-orange-100"
+									onClick={() => {
+										if (kycInfo.level === "ONE" && kycProgress === 0) {
+											setKycProgress()
+										} else if (
+											(kycInfo.level === "TWO" || kycInfo.level === "THREE") &&
+											paymentConfig.length === 0
+										) {
+											handleProfileNavigate()
+										} else {
+											null
+										}
+									}}>
+									{shouldShowIntro && (
+										<span className="flex items-center gap-x-2">
+											{kycInfo.level === "ONE" && kycProgress === 0
+												? "Complete Registration"
+												: (kycInfo.level === "TWO" || kycInfo.level === "THREE") &&
+												  paymentConfig.length === 0
+												? "Add x-pub key"
+												: ""}{" "}
+											<ChevronRightIcon />
+										</span>
+									)}
+								</button>
+							</div>
+						)}
 					</div>
 
 					<div className="mb-4 hidden w-full items-center justify-center md:mb-0 md:flex md:w-1/4">
