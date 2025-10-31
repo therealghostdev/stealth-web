@@ -194,8 +194,8 @@ const Client = ({ exchangeRate: { data }, profile, transactions }: Props) => {
 									) : Number(fields.amount) < profile.kycInfo.minAmount ? (
 										<p className="flex items-center gap-1 text-xs text-red-100">
 											<WarningCircle className="text-red-100" />
-											Due to dust transactions, your purchase must be higher than{" "}
-											{formatDigits(profile.kycInfo.minAmount)}.
+											Due to dust transactions, your purchase must be{" "}
+											{formatDigits(profile.kycInfo.minAmount)} or higher.
 										</p>
 									) : null}
 

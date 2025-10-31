@@ -249,7 +249,7 @@ const Init = (props: Props) => {
 						<small className="text-[14px] text-[#AAAAAA]">
 							{props.paymentConfig[0]?.alias}
 						</small>
-						<small className="text-[16px]">{props.paymentConfig[0]?.xpubKey}</small>
+						<small className="text-[16px] truncate">{props.paymentConfig[0]?.xpubKey}</small>
 					</div>
 					{fields.usexpub && error && (
 						<small className="mt-2 block text-[#B31919]">{error}</small>
