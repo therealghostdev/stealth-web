@@ -227,7 +227,9 @@ const Init = (props: Props) => {
 							</button>
 						}
 					/>
-					{error !== "" && <small className="text-[#B31919]">{error}</small>}
+					{error && !fields.usexpub && (
+						<small className="text-[#B31919]">{error}</small>
+					)}
 					<p className="text-xs">
 						Please paste in your wallet address here. (Avoid reusing the same address
 						for privacy reasons)
@@ -247,8 +249,13 @@ const Init = (props: Props) => {
 						<small className="text-[14px] text-[#AAAAAA]">
 							{props.paymentConfig[0]?.alias}
 						</small>
-						<small className="text-[16px]">{props.paymentConfig[0]?.xpubKey}</small>
+						<small className="truncate text-[16px]">
+							{props.paymentConfig[0]?.xpubKey}
+						</small>
 					</div>
+					{fields.usexpub && error && (
+						<small className="mt-2 block text-[#B31919]">{error}</small>
+					)}
 				</div>
 			</div>
 

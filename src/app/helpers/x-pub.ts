@@ -16,8 +16,13 @@ export const addXpub = async (payload: xpubInputProp) => {
 		body: JSON.stringify(payload),
 		headers: session,
 	})
+	const data = await res.json()
 	if (!res.ok) {
-		return createResponse("Failed to add xpub key", res.status, false)
+		return createResponse(
+			data?.message || "Failed to add xpub key",
+			res.status,
+			false
+		)
 	}
 	return createResponse("xpub key addition was successful!", res.status, true)
 }

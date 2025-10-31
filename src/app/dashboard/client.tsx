@@ -4,7 +4,7 @@ import { useEffect, useState } from "react"
 
 import { TableBody, TableHead } from "@/components/transactions-table"
 import { CurrencyInput } from "@/components/shared/input"
-import { formatCurrency } from "../helpers/amount"
+import { formatCurrency, formatDigits } from "../helpers/amount"
 import InstantBuy from "@/components/instant-buy"
 import { ExchangeRateProps, PaymentDetail } from "@/types/price"
 import { INT_REGEX } from "@/config/constants"
@@ -118,13 +118,17 @@ const Client = ({ exchangeRate: { data }, profile, transactions }: Props) => {
 
 	return (
 		<>
-			{profile.kycLevel === "ONE" && (
+			{(profile.kycInfo.level === "ONE" ||
+				((profile.kycInfo.level === "TWO" || profile.kycInfo.level === "THREE") &&
+					profile.physicalWallets.length === 0)) && (
 				<section>
 					<Start
 						open={openModal}
 						setOpen={closeModal}
 						setKycProgress={IncreaseKycProgress}
 						kycProgress={kycScreen}
+						paymentConfig={paymentConfig}
+						kycInfo={profile.kycInfo}
 						reverseKycProgress={reduceKycProgress}
 					/>
 				</section>
@@ -163,7 +167,7 @@ const Client = ({ exchangeRate: { data }, profile, transactions }: Props) => {
 										it&apos;s not your Bitcoin until you self-custody it.
 									</p>
 									<CurrencyInput
-										disableInput={profile.kycLevel === "ONE"}
+										disableInput={profile.kycInfo.level === "ONE"}
 										amount={displayAmount}
 										currency={fields.currency}
 										inputName="amount"
@@ -178,13 +182,23 @@ const Client = ({ exchangeRate: { data }, profile, transactions }: Props) => {
 											</option>
 										))}
 									</CurrencyInput>
-									{Number(fields.amount) > 5000000 &&
-										(profile.kycLevel === "ONE" || profile.kycLevel === "TWO") && (
+									{Number(fields.amount) > profile.kycInfo.maxAmount ? (
+										(profile.kycInfo.level === "ONE" ||
+											profile.kycInfo.level === "TWO") && (
 											<p className="flex items-center gap-1 text-xs text-red-100">
 												<WarningCircle className="text-red-100" />
-												Upgrade your KYC to buy BTC above 5M.
+												Upgrade your KYC to buy BTC above{" "}
+												{formatDigits(profile.kycInfo.maxAmount)}.
 											</p>
-										)}
+										)
+									) : Number(fields.amount) < profile.kycInfo.minAmount ? (
+										<p className="flex items-center gap-1 text-xs text-red-100">
+											<WarningCircle className="text-red-100" />
+											Due to dust transactions, your purchase must be{" "}
+											{formatDigits(profile.kycInfo.minAmount)} or higher.
+										</p>
+									) : null}
+
 									<p className="flex items-center gap-1 text-xs text-black-400">
 										<WarningCircle className="text-alt-orange-100" />
 										Exchange rate: 1 BTC = {formatCurrency(data.pricePerBtc)}
@@ -201,8 +215,9 @@ const Client = ({ exchangeRate: { data }, profile, transactions }: Props) => {
 									<Button
 										type="button"
 										disabled={
-											profile.kycLevel === "ONE" ||
-											(profile.kycLevel === "TWO" && Number(fields.amount) > 5000000)
+											profile.kycInfo.level === "ONE" ||
+											(profile.kycInfo.level === "TWO" &&
+												Number(fields.amount) > profile.kycInfo.maxAmount)
 										}
 										onClick={handleSubmit1}
 										width="w-full">
