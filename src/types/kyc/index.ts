@@ -34,3 +34,9 @@ export interface Step2Props extends BaseStepProps {
 	submitInfo: () => void
 	updateFormErrors: (errors: Step2ErrorTypes) => void
 }
+
+export interface ApiResponse {
+	message: string
+	status: number
+	success: boolean
+}

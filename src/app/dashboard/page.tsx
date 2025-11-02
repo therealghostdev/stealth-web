@@ -1,8 +1,9 @@
+import { RedirectClient } from "@/components/shared/redirectClient"
 import { getAllPaymentDetails, getExchangeRate } from "../helpers/get-price"
 import { getProfile } from "../helpers/get-profile"
 import Client from "./client"
 import { ExpiredSessionError } from "@/shared/error"
-import { redirect } from "next/navigation"
+// import { redirect } from "next/navigation" will remove line once new approach works
 
 const Page = async () => {
 	const transactionsRes = await getAllPaymentDetails()
@@ -23,7 +24,8 @@ const Page = async () => {
 
 	if (profile instanceof Error) {
 		if (profile instanceof ExpiredSessionError) {
-			redirect("/account/login")
+			// redirect("/account/login") will remove line once new approach works
+			return <RedirectClient to="/account/login" />
 		}
 		return (
 			<div className="flex h-screen flex-col items-center justify-center">

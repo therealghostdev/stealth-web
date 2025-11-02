@@ -36,7 +36,7 @@ const Processing = (props: Props) => {
 			const { data } = res as PaymentStatusProps
 			if (
 				data.paymentState === "PAID" ||
-				(data.paymentState === "ALREADY_PROCESSED" && timer < 1)
+				data.paymentState === "ALREADY_PROCESSED"
 			) {
 				props.setPaymentState(data.paymentState)
 				paymentReceived.current = true
@@ -48,8 +48,8 @@ const Processing = (props: Props) => {
 	}
 
 	useEffect(() => {
-		const interval = setInterval(() => {
-			handleConfirmPayment()
+		const interval = setInterval(async () => {
+			await handleConfirmPayment()
 		}, 10000)
 		return () => clearInterval(interval)
 		// we only want to run this effect once when the component mounts

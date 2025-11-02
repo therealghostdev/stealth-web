@@ -9,18 +9,16 @@ import {
 	PaymentStatusProps,
 	fetchMeta,
 } from "@/types/price"
+import { getAuthHeaders } from "@/shared/functions"
 
 export const getExchangeRate = async (): Promise<ExchangeRateProps | Error> => {
-	const session = await auth()
+	const session = await getAuthHeaders(false)
 	if (!session) {
 		return new Error("No session found!")
 	}
-	const { accessToken } = session
 	const url = endpoints().price.btc
 	const response = await fetch(url, {
-		headers: {
-			Authorization: `Bearer ${accessToken}`,
-		},
+		headers: session,
 		// revalidate data every 30 seconds
 		next: { revalidate: 30, tags: ["price"] },
 	})
@@ -33,7 +31,8 @@ export const getExchangeRate = async (): Promise<ExchangeRateProps | Error> => {
 
 interface PaymentPayload {
 	amount: string | number
-	walletAddress: string
+	walletAddress?: string
+	walletId?: string
 	amountInSats?: string | number
 	narration?: string
 	generatePaymentLink?: boolean
@@ -42,43 +41,35 @@ interface PaymentPayload {
 export const getPaymentDetails = async (
 	payload: PaymentPayload
 ): Promise<PaymentDetailsProps> => {
-	const session = await auth()
+	const session = await getAuthHeaders()
 	if (!session) {
 		throw new Error("No session found!")
 	}
-	const { accessToken } = session
 	const url = endpoints().payment["get-details"]
 	const response = await fetch(url, {
 		method: "POST",
 		body: JSON.stringify(payload),
-		headers: {
-			Authorization: `Bearer ${accessToken}`,
-			"Content-Type": "application/json",
-		},
+		headers: session,
 		next: { revalidate: 60, tags: ["paid"] },
 	})
-	if (!response.ok) {
-		throw new Error("Failed to fetch payment details!")
-	}
 	const data = await response.json()
+	if (!response.ok) {
+		throw new Error(data?.message || "Failed to fetch payment details!")
+	}
 	return data
 }
 
 export const getAllPaymentDetails = async (): Promise<
 	fetchMeta & { data: PaymentDetail[] }
 > => {
-	const session = await auth()
+	const session = await getAuthHeaders()
 	if (!session) {
 		throw new Error("No session found!")
 	}
-	const { accessToken } = session
 	const url = endpoints().payment.list
 	const response = await fetch(url, {
 		method: "GET",
-		headers: {
-			Authorization: `Bearer ${accessToken}`,
-			"Content-Type": "application/json",
-		},
+		headers: session,
 		next: { revalidate: 10, tags: ["paid", "approved"] },
 	})
 	if (!response.ok) {
@@ -91,19 +82,15 @@ export const getAllPaymentDetails = async (): Promise<
 export const confirmPayment = async (
 	referenceNumber: string
 ): Promise<PaymentStatusProps | Error> => {
-	const session = await auth()
+	const session = await getAuthHeaders()
 	if (!session) {
 		return new Error("No session found!")
 	}
-	const { accessToken } = session
 	const url = endpoints().payment["get-status"]
 	const response = await fetch(url, {
 		method: "POST",
 		body: JSON.stringify({ referenceNumber }),
-		headers: {
-			Authorization: `Bearer ${accessToken}`,
-			"Content-Type": "application/json",
-		},
+		headers: session,
 	})
 	if (!response.ok) {
 		return new Error("Failed to fetch payment details!")
