@@ -44,7 +44,7 @@ export const Payment = (props: Props) => {
 	const copyAccountNumber = () => {
 		if (!copied) {
 			navigator.clipboard
-				.writeText(depositInfo.accountName)
+				.writeText(depositInfo.accountNumber)
 				.then(() => {
 					setCopied(true)
 				})
@@ -57,6 +57,7 @@ export const Payment = (props: Props) => {
 	}
 
 	const handleSubmit = async () => {
+		await handleConfirmPayment()
 		props.next()
 	}
 
@@ -70,7 +71,7 @@ export const Payment = (props: Props) => {
 			const { data } = res as PaymentStatusProps
 			if (
 				data.paymentState === "PAID" ||
-				(data.paymentState === "ALREADY_PROCESSED" && timer < 1)
+				data.paymentState === "ALREADY_PROCESSED"
 			) {
 				props.setPaymentState(data.paymentState)
 				props.next()
@@ -90,8 +91,8 @@ export const Payment = (props: Props) => {
 	// poll for payment confirmation every 10 seconds
 	useEffect(() => {
 		if (!depositInfo.paymentReference) return
-		const interval = setInterval(() => {
-			handleConfirmPayment()
+		const interval = setInterval(async () => {
+			await handleConfirmPayment()
 		}, 10000)
 		return () => clearInterval(interval)
 		// we only want to run this effect once when the component mounts
