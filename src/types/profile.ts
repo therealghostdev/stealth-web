@@ -18,7 +18,11 @@ export type UserProps = {
 	lastName: string
 	email: string
 	imageUrl: string | null
-	kycLevel: string | null
+	kycInfo: {
+		level: string
+		minAmount: number
+		maxAmount: number
+	}
 	activated: boolean
 	langKey: string
 	createdBy: string
@@ -33,4 +37,13 @@ export type UserProps = {
 		bankName: string
 		status: string
 	}
+	physicalWallets:
+		| [
+				{
+					id: number
+					alias: string
+					xpubKey: string
+				},
+		  ]
+		| []
 }

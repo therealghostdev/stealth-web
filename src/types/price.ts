@@ -24,6 +24,7 @@ export type PaymentDetailsProps = {
 		amountDue: string
 		amountInSats: string
 		paymentLink?: string
+		narration: string
 	}
 }
 

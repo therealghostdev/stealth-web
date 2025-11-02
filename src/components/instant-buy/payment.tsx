@@ -1,5 +1,5 @@
 "use client"
-import { Copy } from "@phosphor-icons/react"
+import { Check, Copy } from "@phosphor-icons/react"
 import { useEffect, useState } from "react"
 
 import { formatCurrency } from "@/app/helpers/amount"
@@ -19,6 +19,7 @@ interface Props {
 		feeAmount: string
 		amountDue: string
 		amountInSats: string
+		narration: string
 	}
 	paymentState: string
 	setPaymentState: (state: string) => void
@@ -29,6 +30,7 @@ interface Props {
 
 export const Payment = (props: Props) => {
 	const [timer, setTimer] = useState(1800)
+	const [copied, setCopied] = useState(false)
 	const { amount, depositInfo } = props
 
 	const copyPaymentDetails = () => {
@@ -39,7 +41,23 @@ export const Payment = (props: Props) => {
 		`)
 	}
 
+	const copyAccountNumber = () => {
+		if (!copied) {
+			navigator.clipboard
+				.writeText(depositInfo.accountNumber)
+				.then(() => {
+					setCopied(true)
+				})
+				.finally(() => {
+					setTimeout(() => {
+						setCopied(false)
+					}, 1000)
+				})
+		}
+	}
+
 	const handleSubmit = async () => {
+		await handleConfirmPayment()
 		props.next()
 	}
 
@@ -53,7 +71,7 @@ export const Payment = (props: Props) => {
 			const { data } = res as PaymentStatusProps
 			if (
 				data.paymentState === "PAID" ||
-				(data.paymentState === "ALREADY_PROCESSED" && timer < 1)
+				data.paymentState === "ALREADY_PROCESSED"
 			) {
 				props.setPaymentState(data.paymentState)
 				props.next()
@@ -73,8 +91,8 @@ export const Payment = (props: Props) => {
 	// poll for payment confirmation every 10 seconds
 	useEffect(() => {
 		if (!depositInfo.paymentReference) return
-		const interval = setInterval(() => {
-			handleConfirmPayment()
+		const interval = setInterval(async () => {
+			await handleConfirmPayment()
 		}, 10000)
 		return () => clearInterval(interval)
 		// we only want to run this effect once when the component mounts
@@ -102,8 +120,8 @@ export const Payment = (props: Props) => {
 					</p>
 					<button
 						onClick={copyPaymentDetails}
-						className="flex items-center gap-1 text-xl">
-						Copy <Copy size={24} />
+						className="flex items-center gap-1 text-xl text-[#AAAAAA]">
+						Copy
 					</button>
 				</div>
 			</div>
@@ -114,13 +132,22 @@ export const Payment = (props: Props) => {
 				</div>
 				<div className="flex w-full items-center justify-between text-xl font-medium">
 					<p>{depositInfo.bankName}</p>
-					<p>{depositInfo.accountNumber}</p>
+					<p className="flex gap-x-2">
+						{depositInfo.accountNumber}
+						<span role="button" aria-label="copy text" onClick={copyAccountNumber}>
+							{!copied ? (
+								<Copy size={24} color="#F7931A" />
+							) : (
+								<Check size={24} color="#66bc74" />
+							)}
+						</span>
+					</p>
 				</div>
 			</div>
 			<div className="my-12 w-full">
 				<div className="flex w-full items-center justify-between text-sm text-white-300">
 					<p>Amount of Bitcoin Purchase</p>
-					<p>Charges</p>
+					<p>Fees</p>
 				</div>
 				<div className="flex w-full items-center justify-between text-xl font-medium">
 					<p>{formatCurrency(+amount)}</p>
@@ -128,6 +155,14 @@ export const Payment = (props: Props) => {
 				</div>
 			</div>
 			<hr className="w-full" />
+			<div className="mb-20 mt-12 w-full">
+				<div className="flex w-full flex-col gap-y-2 rounded-md border border-[#2B2B2B] bg-[#161616] px-4 py-2 font-satoshi text-xl font-medium">
+					<p className="text-[14px] text-[#AAAAAA]">
+						When making your bank transfer, kindly use this as narration:
+					</p>
+					<p className="text-[16px] text-white-100">{depositInfo.narration}</p>
+				</div>
+			</div>
 			<div className="mb-20 mt-12 w-full">
 				<div className="flex w-full items-center justify-between text-sm text-white-300">
 					<p>Total Amount To Be Paid</p>

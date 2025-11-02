@@ -5,12 +5,14 @@ import { Authentication, Profile, Security } from "@/components/profile"
 import { Spinner, TabPanel } from "@/components"
 import { UserProps } from "@/types/profile"
 import { getProfile } from "@/app/helpers/get-profile"
+import Xpub from "@/components/profile/x-pub"
 
-const TabList = ["Profile", "Security Settings", "2-FA"]
+const TabList = ["Profile", "Xpub Settings", "Security Settings", "2-FA"]
 
 const Page = () => {
 	const [user, setUser] = useState<UserProps | null>(null)
-	const [tab, setTab] = useState(0)
+	const [tab, setTab] = useState(1)
+	const [wallets, setWallets] = useState<UserProps["physicalWallets"] | []>([])
 
 	useEffect(() => {
 		const getUser = async () => {
@@ -19,11 +21,19 @@ const Page = () => {
 				return console.error(data)
 			}
 			setUser(data)
+			setWallets(data.physicalWallets || [])
 		}
 		getUser()
 	}, [])
 
 	if (!user) return <Spinner />
+
+	const refreshWallets = async () => {
+		const updated = await getProfile()
+		if (!(updated instanceof Error)) {
+			setWallets(updated.physicalWallets || [])
+		}
+	}
 
 	return (
 		<div className="flex h-full w-full flex-col gap-6">
@@ -48,9 +58,16 @@ const Page = () => {
 					<Profile {...user} />
 				</TabPanel>
 				<TabPanel tabIndex={1} index={tab}>
-					<Security {...user} />
+					<Xpub
+						{...user}
+						physicalWallets={wallets}
+						onWalletsUpdated={refreshWallets}
+					/>
 				</TabPanel>
 				<TabPanel tabIndex={2} index={tab}>
+					<Security {...user} />
+				</TabPanel>
+				<TabPanel tabIndex={3} index={tab}>
 					<Authentication {...user} />
 				</TabPanel>
 			</div>
