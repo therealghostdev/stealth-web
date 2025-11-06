@@ -217,7 +217,7 @@ const Client = ({ exchangeRate: { data }, profile, transactions }: Props) => {
 										disabled={
 											profile.kycInfo.level === "ONE" ||
 											(profile.kycInfo.level === "TWO" &&
-												Number(fields.amount) > profile.kycInfo.maxAmount)
+												Number(fields.amount) < profile.kycInfo.minAmount)
 										}
 										onClick={handleSubmit1}
 										width="w-full">
