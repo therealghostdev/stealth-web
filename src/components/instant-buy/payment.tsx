@@ -112,27 +112,29 @@ export const Payment = (props: Props) => {
 			<p className="text-lg text-black-400">
 				Make payment into the account details provided below.
 			</p>
+
 			<div className="mb-16 mt-8 w-full">
 				<p className="text-white-300">You are to pay</p>
-				<div className="flex w-full items-center justify-between">
+				<div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between sm:gap-0">
 					<p className="font-satoshi text-[28px] font-medium">
 						{formatCurrency(Number(depositInfo.amountDue))}
 					</p>
 					<button
 						onClick={copyPaymentDetails}
-						className="flex items-center gap-1 text-xl text-[#AAAAAA]">
+						className="flex items-center gap-1 self-start text-xl text-[#AAAAAA] sm:self-auto">
 						Copy
 					</button>
 				</div>
 			</div>
+
 			<div className="w-full">
-				<div className="flex w-full items-center justify-between text-sm text-white-300">
+				<div className="flex flex-col gap-1 text-sm text-white-300 sm:flex-row sm:items-center sm:justify-between sm:gap-0">
 					<p>Bank Name</p>
 					<p>Account Number</p>
 				</div>
-				<div className="flex w-full items-center justify-between text-xl font-medium">
+				<div className="flex flex-col gap-1 text-xl font-medium sm:flex-row sm:items-center sm:justify-between sm:gap-0">
 					<p>{depositInfo.bankName}</p>
-					<p className="flex gap-x-2">
+					<p className="flex items-center gap-x-2">
 						{depositInfo.accountNumber}
 						<span role="button" aria-label="copy text" onClick={copyAccountNumber}>
 							{!copied ? (
@@ -144,17 +146,20 @@ export const Payment = (props: Props) => {
 					</p>
 				</div>
 			</div>
+
 			<div className="my-12 w-full">
-				<div className="flex w-full items-center justify-between text-sm text-white-300">
+				<div className="flex flex-col gap-1 text-sm text-white-300 sm:flex-row sm:items-center sm:justify-between sm:gap-0">
 					<p>Amount of Bitcoin Purchase</p>
 					<p>Fees</p>
 				</div>
-				<div className="flex w-full items-center justify-between text-xl font-medium">
+				<div className="flex flex-col gap-1 text-xl font-medium sm:flex-row sm:items-center sm:justify-between sm:gap-0">
 					<p>{formatCurrency(+amount)}</p>
 					<p>{formatCurrency(Number(depositInfo.feeAmount))}</p>
 				</div>
 			</div>
+
 			<hr className="w-full" />
+
 			<div className="mb-20 mt-12 w-full">
 				<div className="flex w-full flex-col gap-y-2 rounded-md border border-[#2B2B2B] bg-[#161616] px-4 py-2 font-satoshi text-xl font-medium">
 					<p className="text-[14px] text-[#AAAAAA]">
@@ -163,19 +168,21 @@ export const Payment = (props: Props) => {
 					<p className="text-[16px] text-white-100">{depositInfo.narration}</p>
 				</div>
 			</div>
+
 			<div className="mb-20 mt-12 w-full">
-				<div className="flex w-full items-center justify-between text-sm text-white-300">
+				<div className="flex flex-col gap-1 text-sm text-white-300 sm:flex-row sm:items-center sm:justify-between sm:gap-0">
 					<p>Total Amount To Be Paid</p>
 					<p>Expires In</p>
 				</div>
-				<div className="flex w-full items-center justify-between text-xl font-medium">
+				<div className="flex flex-col gap-1 text-xl font-medium sm:flex-row sm:items-center sm:justify-between sm:gap-0">
 					<p>{formatCurrency(Number(depositInfo.amountDue))}</p>
 					<p className={`${timer > 0 ? "text-green-500" : "text-red-500"}`}>
 						{formatTime(timer)}
 					</p>
 				</div>
 			</div>
-			<div className="grid w-full grid-cols-2 gap-3 pb-10">
+
+			<div className="grid w-full grid-cols-1 gap-3 pb-10 sm:grid-cols-2">
 				<Button type="button" onClick={props.previous} width="w-full bg-black-600">
 					Go Back
 				</Button>

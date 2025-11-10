@@ -204,14 +204,16 @@ const Client = ({ exchangeRate: { data }, profile, transactions }: Props) => {
 										Exchange rate: 1 BTC = {formatCurrency(data.pricePerBtc)}
 									</p>
 								</div>
-								<div className="grid w-full grid-cols-2 gap-6">
-									<Button
-										type="button"
-										onClick={handleSubmit2}
-										width="w-full bg-black-600"
-										disabled={true}>
-										Generate Payment Link
-									</Button>
+								<div className="grid w-full gap-6">
+									{!true && (
+										<Button
+											type="button"
+											onClick={handleSubmit2}
+											width="w-full bg-black-600"
+											disabled={true}>
+											Generate Payment Link
+										</Button>
+									)}
 									<Button
 										type="button"
 										disabled={
@@ -220,7 +222,8 @@ const Client = ({ exchangeRate: { data }, profile, transactions }: Props) => {
 												Number(fields.amount) < profile.kycInfo.minAmount)
 										}
 										onClick={handleSubmit1}
-										width="w-full">
+										// width="w-full"
+										style={{ width: "100%" }}>
 										Buy Now
 									</Button>
 								</div>

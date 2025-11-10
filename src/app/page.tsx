@@ -7,7 +7,6 @@ export default async function Home() {
 	if (data?.accessToken) {
 		return <RedirectClient to="/dashboard" />
 	}
-
 	// redirect to /account/login if user is not signed in
 	return <RedirectClient to="/account/login" />
 }
