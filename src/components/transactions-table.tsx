@@ -17,7 +17,7 @@ interface Props {
 const StatusColor = {
 	PAID: "bg-green-1200 text-green-100",
 	ALREADY_PROCESSED: "bg-green-1200 text-green-100",
-	IN_PROGRESS: "bg-orange-1200 text-orange-100",
+	PROCESSING: "bg-orange-1200 text-orange-100",
 	PENDING: "bg-orange-1200 text-orange-100",
 	INITIATED: "bg-orange-1200 text-orange-100",
 	FAILED: "bg-red-1200 text-red-100",
