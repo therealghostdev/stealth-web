@@ -23,7 +23,7 @@ const Processing = (props: Props) => {
 	const [timer, setTimer] = useState(WAIT_PERIOD_IN_SECONDS)
 
 	const paymentReceived = useRef(
-		props.paymentState === "PAID" || props.paymentState === "ALREADY_PROCESSED"
+		props.paymentState === "PROCESSING" || props.paymentState === "SUCCESSFUL"
 	)
 
 	const handleConfirmPayment = async () => {
@@ -34,10 +34,16 @@ const Processing = (props: Props) => {
 				return
 			}
 			const { data } = res as PaymentStatusProps
-			if (
-				data.paymentState === "PAID" ||
-				data.paymentState === "ALREADY_PROCESSED"
-			) {
+
+			let paymentState = "INITIATED"
+
+			if ((data.paymentState as string) === "PAID") {
+				paymentState = "PROCESSING"
+			} else if ((data.paymentState as string) === "ALREADY_PROCESSED") {
+				paymentState = "SUCCESSFUL"
+			}
+
+			if (paymentState === "PROCESSING" || paymentState === "SUCCESSFUL") {
 				props.setPaymentState(data.paymentState)
 				paymentReceived.current = true
 				props.next()

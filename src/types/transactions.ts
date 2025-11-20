@@ -3,7 +3,7 @@ export type TransactionProps = {
 	userId: 852
 	paymentId: 1107
 	walletAddress: string
-	transactionStatus: "PROCESSING" | "PENDING" | "SUCCESSFUL" | "FAILED"
+	transactionStatus: "INITIATED" | "PROCESSING" | "SUCCESSFUL" | "FAILED"
 	transactionReference: string
 	processorId: string
 	createdDate: Date | string
