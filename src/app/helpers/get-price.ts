@@ -96,6 +96,5 @@ export const confirmPayment = async (
 		return new Error("Failed to fetch payment details!")
 	}
 	const data = await response.json()
-	console.log(data, "is data")
 	return data as PaymentStatusProps
 }
