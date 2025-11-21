@@ -20,6 +20,7 @@ import { formatAmountForDisplay } from "@/shared/functions"
 import { Cross1Icon } from "@radix-ui/react-icons"
 import CustomSwitch from "../shared/switch"
 import { UserProps } from "@/types/profile"
+import { XpubSelect } from "../xpubSelect"
 
 interface Props {
 	paymentConfig: UserProps["physicalWallets"] | []
@@ -54,6 +55,7 @@ const Init = (props: Props) => {
 	const [displayAmount1, setDisplayAmount1] = useState("")
 	const [buttonDisableld, setButtonDisabled] = useState(false)
 	const { fields, handleChange } = props
+	const [selectedWalletId, setSelectedWalletId] = useState<number | null>(null)
 
 	const handleSubmit = async () => {
 		const { amount, amountInSats, walletAddress, usexpub } = fields
@@ -71,7 +73,12 @@ const Init = (props: Props) => {
 				amount: Number(amount),
 				amountInSats,
 				...(fields.usexpub
-					? { walletId: String(props.paymentConfig[0]?.id) }
+					? {
+							walletId:
+								props.paymentConfig.length === 1
+									? String(props.paymentConfig[0]?.id)
+									: String(selectedWalletId),
+					  }
 					: { walletAddress: fields.walletAddress }),
 			})
 			if (res instanceof Error) {
@@ -236,27 +243,48 @@ const Init = (props: Props) => {
 					</p>
 				</div>
 
-				<div
-					className={`absolute inset-0 transition-all duration-300 ease-in-out ${
-						fields.usexpub
-							? "translate-y-0 opacity-100"
-							: "pointer-events-none -translate-y-2 opacity-0"
-					}`}>
-					<p className="text-white" aria-label="x-pub-key">
-						Xpub key <span className="text-[#B31919]">*</span>
-					</p>
-					<div className="flex flex-col gap-y-2 rounded-md border border-[#494949] bg-[#2B2B2B] px-2 py-5 font-satoshi">
-						<small className="text-[14px] text-[#AAAAAA]">
-							{props.paymentConfig[0]?.alias}
-						</small>
-						<small className="truncate text-[16px]">
-							{props.paymentConfig[0]?.xpubKey}
-						</small>
+				{fields.usexpub && props.paymentConfig.length === 1 && (
+					<div
+						className={`absolute inset-0 transition-all duration-300 ease-in-out ${
+							fields.usexpub
+								? "translate-y-0 opacity-100"
+								: "pointer-events-none -translate-y-2 opacity-0"
+						}`}>
+						<p className="text-white" aria-label="x-pub-key">
+							Xpub key <span className="text-[#B31919]">*</span>
+						</p>
+						<div className="flex flex-col gap-y-2 rounded-md border border-[#494949] bg-[#2B2B2B] px-2 py-5 font-satoshi">
+							<small className="text-[14px] text-[#AAAAAA]">
+								{props.paymentConfig[0]?.alias}
+							</small>
+							<small className="truncate text-[16px]">
+								{props.paymentConfig[0]?.xpubKey}
+							</small>
+						</div>
+						{fields.usexpub && error && (
+							<small className="mt-2 block text-[#B31919]">{error}</small>
+						)}
 					</div>
-					{fields.usexpub && error && (
-						<small className="mt-2 block text-[#B31919]">{error}</small>
-					)}
-				</div>
+				)}
+
+				{fields.usexpub && props.paymentConfig.length > 1 && (
+					<div
+						className={`flex w-full flex-col gap-1 ${
+							fields.usexpub ? "translate-y-0 opacity-100" : "-translate-y-2 opacity-0"
+						}`}>
+						<label className="text-white mb-2 block text-sm font-medium">
+							Enter Xpub <span className="text-[#B31919]">*</span>
+						</label>
+						<XpubSelect
+							items={props.paymentConfig}
+							value={selectedWalletId}
+							onValueChange={(id) => {
+								setSelectedWalletId(id)
+							}}
+							placeholder="Select Xpub"
+						/>
+					</div>
+				)}
 			</div>
 
 			<div className="pb-10">
