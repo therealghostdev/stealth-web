@@ -69,16 +69,11 @@ export const Payment = (props: Props) => {
 				return
 			}
 			const { data } = res as PaymentStatusProps
-
-			let paymentState = "INITIATED"
-
-			if ((data.paymentState as string) === "PAID") {
-				paymentState = "PROCESSING"
-			} else if ((data.paymentState as string) === "ALREADY_PROCESSED") {
-				paymentState = "SUCCESSFUL"
-			}
-
-			if (paymentState === "PROCESSING" || paymentState === "SUCCESSFUL") {
+			
+			if (
+				data.paymentState === "PROCESSING" ||
+				data.paymentState === "SUCCESSFUL"
+			) {
 				props.setPaymentState(data.paymentState)
 				props.next()
 			}
