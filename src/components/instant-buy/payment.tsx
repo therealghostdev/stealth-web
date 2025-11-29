@@ -69,7 +69,7 @@ export const Payment = (props: Props) => {
 				return
 			}
 			const { data } = res as PaymentStatusProps
-			
+
 			if (
 				data.paymentState === "PROCESSING" ||
 				data.paymentState === "SUCCESSFUL"
