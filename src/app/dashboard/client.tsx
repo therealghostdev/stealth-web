@@ -29,18 +29,12 @@ const Client = ({ exchangeRate: { data }, profile, transactions }: Props) => {
 	const [openGenerateModal, setOpenGenerateModal] = useState(false)
 	const [error, setError] = useState("")
 	const [kycScreen, setKycScreen] = useState<0 | 1 | 2 | 3>(0)
-	const [displayAmount, setDisplayAmount] = useState("")
-	const [paymentConfig, setPaymentConfig] = useState<
-		UserProps["physicalWallets"] | []
-	>([])
+	const displayAmount = formatAmountForDisplay(fields.amount)
+	const paymentConfig = profile.physicalWallets
 
 	const displayName = profile.firstName
 		? profile.firstName
 		: profile.email.split("@")[0]
-
-	useEffect(() => {
-		setDisplayAmount(formatAmountForDisplay(fields.amount))
-	}, [fields.amount])
 
 	const handleChange = (
 		e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
@@ -111,10 +105,6 @@ const Client = ({ exchangeRate: { data }, profile, transactions }: Props) => {
 			return prev
 		})
 	}
-
-	useEffect(() => {
-		setPaymentConfig(profile.physicalWallets)
-	}, [profile.physicalWallets])
 
 	return (
 		<>

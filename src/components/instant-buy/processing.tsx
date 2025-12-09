@@ -66,8 +66,8 @@ const Processing = (props: Props) => {
 
 	useEffect(() => {
 		if (
-			props.paymentState === "PAID" ||
-			props.paymentState === "ALREADY_PROCESSED"
+			props.paymentState === "PROCESSING" ||
+			props.paymentState === "SUCCESSFUL"
 		) {
 			setTimer(0)
 			paymentReceived.current = true

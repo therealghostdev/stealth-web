@@ -14,9 +14,15 @@ const Page = () => {
 		confirm_password: "",
 	})
 	const [data, setData] = useState({ message: "", success: false })
-	const [passwordsMatch, setPasswordsMatch] = useState(false)
 	const [error, setError] = useState<Error | null>(null)
-	const [passwordWarning, setPAsswordWarning] = useState<boolean>(false)
+
+	const passwordWarning =
+		formFields.password !== "" && !PASSWORD_REGEX.test(formFields.password)
+
+	const passwordsMatch =
+		formFields.password !== "" &&
+		formFields.confirm_password !== "" &&
+		formFields.password === formFields.confirm_password
 
 	const { isPending, mutateAsync } = useMutation({
 		mutationFn: (payload: {
@@ -77,14 +83,6 @@ const Page = () => {
 			password: formFields.password,
 		})
 	}
-
-	useEffect(() => {
-		setPasswordsMatch(formFields.password === formFields.confirm_password)
-	}, [formFields.confirm_password, formFields.password])
-
-	useEffect(() => {
-		setPAsswordWarning(PASSWORD_REGEX.test(formFields.password))
-	}, [formFields.password])
 
 	return (
 		<>
@@ -160,8 +158,8 @@ const Page = () => {
 							label="Password"
 							message="(Minimum of 8 characters, a symbol and an uppercase letter)"
 							error={
-								!passwordWarning && formFields.password !== ""
-									? "Include at least one uppercase letter and at least one symbol."
+								passwordWarning && formFields.password !== ""
+									? "Include at least one uppercase letter, one number and one symbol."
 									: ""
 							}
 						/>

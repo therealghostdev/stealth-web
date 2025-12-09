@@ -10,14 +10,13 @@ const ResetPasswordForm = () => {
 	const searchParams = useSearchParams()
 	const key = searchParams.get("key")
 	const router = useRouter()
-
-	const [passwordsMatch, setPasswordsMatch] = useState(false)
 	const [loading, setLoading] = useState(false)
 	const [error, setError] = useState("")
 	const [formFields, setFormFields] = useState({
 		password: "",
 		confirm_password: "",
 	})
+	const passwordsMatch = formFields.password === formFields.confirm_password
 
 	const handleChange = (e: React.ChangeEvent<HTMLInputElement>) =>
 		setFormFields({ ...formFields, [e.target.name]: e.target.value })
@@ -42,10 +41,6 @@ const ResetPasswordForm = () => {
 			setLoading(false)
 		}
 	}
-
-	useEffect(() => {
-		setPasswordsMatch(formFields.password === formFields.confirm_password)
-	}, [formFields.confirm_password, formFields.password])
 
 	return (
 		<>
