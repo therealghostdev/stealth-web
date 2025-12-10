@@ -76,6 +76,7 @@ export const getAllPaymentDetails = async (): Promise<
 		throw new Error("Failed to fetch payment details!")
 	}
 	const data = await response.json()
+	console.log(data, "is trans data")
 	return data as fetchMeta & { data: PaymentDetail[] }
 }
 

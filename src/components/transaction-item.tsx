@@ -20,21 +20,19 @@ interface Props {
 
 const StatusColor = {
 	INITIATED: "text-white-300",
-	PAID: "text-green-100",
-	ALREADY_PROCESSED: "text-green-100",
-	PENDING: "text-orange-100",
+	SUCCESSFUL: "text-green-100",
+	PROCESSING: "text-orange-100",
 	FAILED: "text-red-100",
 }
 
 const StatusIcon = {
-	ALREADY_PROCESSED: (
-		<CheckCircle className="text-9xl text-green-100" weight="fill" />
-	),
+	SUCCESSFUL: <CheckCircle className="text-9xl text-green-100" weight="fill" />,
 	INITIATED: (
 		<WarningOctagon className="text-9xl text-orange-100" weight="fill" />
 	),
-	PAID: <CheckCircle className="text-9xl text-green-100" weight="fill" />,
-	PENDING: <WarningOctagon className="text-9xl text-orange-100" weight="fill" />,
+	PROCESSING: (
+		<WarningOctagon className="text-9xl text-orange-100" weight="fill" />
+	),
 	FAILED: <WarningCircle className="text-9xl text-red-100" weight="fill" />,
 }
 
@@ -53,7 +51,7 @@ const TransactionItem = ({ transaction, close }: Props) => {
 			<p className="text-[28px] text-white-100">
 				{(Number(transaction.amountInSats) / SATS_PER_BTC).toString()} BTC
 			</p>
-			{transaction.paymentState === "PAID" && (
+			{transaction.paymentState === "PROCESSING" && (
 				<p className="text-center text-xl text-white-100">
 					Payment received! You will receive your Bitcoin shortly.
 				</p>
