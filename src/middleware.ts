@@ -1,14 +1,11 @@
-export { default } from "next-auth/middleware"
+import { withAuth } from "next-auth/middleware"
+
+export default withAuth({
+	pages: {
+		signIn: "/account/login",
+	},
+})
 
 export const config = {
-	matcher: [
-		"/",
-		{
-			source: "/dashboard/:path*",
-			missing: [
-				{ type: "header", key: "next-router-prefetch" },
-				{ type: "header", key: "purpose", value: "prefetch" },
-			],
-		},
-	],
+	matcher: ["/", "/dashboard/:path*"],
 }

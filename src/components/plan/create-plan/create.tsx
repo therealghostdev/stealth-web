@@ -30,9 +30,7 @@ export default function Create({ exchangeRate, profile }: any) {
 	const [error, setError] = useState("")
 	const [errorInstant, setErrorInstant] = useState("")
 
-	const [paymentConfig, setPaymentConfig] = useState<
-		UserProps["physicalWallets"] | []
-	>([])
+	const paymentConfig = profile.physicalWallets
 
 	const [buyPrice, setBuyPrice] = useState("")
 
@@ -114,10 +112,6 @@ export default function Create({ exchangeRate, profile }: any) {
 
 		return () => document.removeEventListener("mousedown", clickOutside)
 	}, [])
-
-	useEffect(() => {
-		setPaymentConfig(profile.physicalWallets)
-	}, [profile.physicalWallets])
 
 	return (
 		<section className="flex min-h-screen px-4 py-6">

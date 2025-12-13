@@ -44,7 +44,7 @@ export type PaymentDetail = {
 	amountInSats: string
 	walletAddress: string
 	narration: string
-	paymentState: "INITIATED" | "PENDING" | "ALREADY_PROCESSED" | "PAID" | "FAILED"
+	paymentState: "INITIATED" | "PROCESSING" | "SUCCESSFUL" | "FAILED"
 	responseCode: string
 	responseMessage: string
 	paymentReference: string

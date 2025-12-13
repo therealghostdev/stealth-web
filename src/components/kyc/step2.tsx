@@ -21,11 +21,14 @@ export default function Step2({
 	const videoRef = useRef<HTMLVideoElement>(null)
 	const [stream, setStream] = useState<MediaStream | null>(null)
 	const [isCameraActive, setIsCameraActive] = useState(false)
-	const [buttonText, setButtonText] = useState("Start Camera")
-	const [errorMessage, setErrorMessage] = useState("")
+	// const [buttonText, setButtonText] = useState("Start Camera")
+	const buttonText = isCameraActive ? "Take Selfie" : "Start Camera"
+	// const [errorMessage, setErrorMessage] = useState("")
+	const [localError, setLocalError] = useState("")
+	const errorMessage = formError.faceCard || localError
 	const [isFaceDetected, setIsFaceDetected] = useState(false)
 	const [isModelLoaded, setIsModelLoaded] = useState(false)
-	const [image, setImage] = useState<File | null>(null)
+	const image = formValues.faceCard
 	const [open, setOpen] = useState<boolean>(false)
 
 	useEffect(() => {
@@ -43,7 +46,7 @@ export default function Step2({
 				setIsModelLoaded(true)
 			} catch (error) {
 				console.error("Error loading face detection models:", error)
-				setErrorMessage(
+				setLocalError(
 					"Failed to load face detection models. Please refresh the page."
 				)
 			}
@@ -57,16 +60,6 @@ export default function Step2({
 			}
 		}
 	}, [stream])
-
-	useEffect(() => {
-		setButtonText(isCameraActive ? "Take Selfie" : "Start Camera")
-	}, [isCameraActive])
-
-	useEffect(() => {
-		if (formError.faceCard) {
-			setErrorMessage(formError.faceCard)
-		}
-	}, [formError.faceCard])
 
 	const startCamera = async () => {
 		setIsCameraActive(true)
@@ -86,7 +79,7 @@ export default function Step2({
 					videoRef.current?.play()
 					setIsCameraActive(true)
 					setStream(mediaStream)
-					setErrorMessage("")
+					setLocalError("")
 
 					// small delay to ensure the video is fully playing
 					setTimeout(() => {
@@ -94,11 +87,11 @@ export default function Step2({
 					}, 500)
 				}
 			} else {
-				setErrorMessage("Failed to initialize camera. Please try again.")
+				setLocalError("Failed to initialize camera. Please try again.")
 			}
 		} catch (err) {
 			console.error("Error accessing camera:", err)
-			setErrorMessage("Camera access denied. Please enable camera permissions.")
+			setLocalError("Camera access denied. Please enable camera permissions.")
 			updateFormErrors({
 				faceCard: "Camera access denied. Please enable camera permissions.",
 			})
@@ -114,10 +107,10 @@ export default function Step2({
 
 		if (detections) {
 			setIsFaceDetected(true)
-			setErrorMessage("")
+			setLocalError("")
 		} else {
 			setIsFaceDetected(false)
-			setErrorMessage(
+			setLocalError(
 				"No face detected or face not clear. Please adjust your position."
 			)
 		}
@@ -133,7 +126,7 @@ export default function Step2({
 				} catch (error) {
 					console.error("Error during face detection:", error)
 					setIsFaceDetected(false)
-					setErrorMessage("Face detection failed. Please try again.")
+					setLocalError("Face detection failed. Please try again.")
 				}
 			}
 
@@ -175,8 +168,6 @@ export default function Step2({
 					if (blob) {
 						const file = new File([blob], "selfie.jpg", { type: "image/jpeg" })
 
-						setImage(file)
-
 						updateKycForm({
 							target: {
 								name: "faceCard",
@@ -190,7 +181,7 @@ export default function Step2({
 							stream.getTracks().forEach((track) => track.stop())
 						}
 						setIsCameraActive(false)
-						setErrorMessage("")
+						setLocalError("")
 					}
 				},
 				"image/jpeg",
@@ -199,7 +190,7 @@ export default function Step2({
 			setIsCameraActive(false)
 		} catch (error) {
 			console.error("Error capturing photo:", error)
-			setErrorMessage("Failed to capture photo. Please try again.")
+			setLocalError("Failed to capture photo. Please try again.")
 			setIsCameraActive(false)
 		}
 	}
@@ -209,7 +200,7 @@ export default function Step2({
 			if (isFaceDetected) {
 				await takePhoto()
 			} else {
-				setErrorMessage(
+				setLocalError(
 					"No face detected or face not clear. Please adjust your position."
 				)
 			}
@@ -217,12 +208,6 @@ export default function Step2({
 			await startCamera()
 		}
 	}
-
-	useEffect(() => {
-		if (formValues.faceCard !== null) {
-			setImage(formValues.faceCard)
-		}
-	}, [formValues.faceCard])
 
 	const { mutate, data, isPending } = useMutation({
 		mutationFn: async ({ image, bvn }: { image: File; bvn: string }) =>
@@ -236,12 +221,6 @@ export default function Step2({
 			console.error("Error:", err)
 		},
 	})
-
-	useEffect(() => {
-		if (data?.status) {
-			setOpen(true)
-		}
-	}, [data])
 
 	const handleModal = (value: boolean) => {
 		setOpen(value)
@@ -308,8 +287,10 @@ export default function Step2({
 							<div className="absolute inset-0 m-auto h-[30%] w-[80%] bg-[#010101]" />
 						</div>
 
-						{errorMessage && (
-							<p className="mt-2 text-center text-red-500">{errorMessage}</p>
+						{(formError.faceCard || localError) && (
+							<p className="mt-2 text-center text-red-500">
+								{formError.faceCard || localError}
+							</p>
 						)}
 
 						<div className="mt-6">

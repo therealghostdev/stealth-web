@@ -45,7 +45,11 @@ export default function Xpub({
 
 	const handleInput = (e: React.ChangeEvent<HTMLInputElement>) => {
 		const { name, value } = e.target
-		setInputState((prev) => ({ ...prev, [name]: value }))
+
+		const updated = { ...inputState, [name]: value }
+		setInputState(updated)
+
+		setInputErrorState(checkErrors(updated.alias, updated.pubKey))
 	}
 
 	const clearInputState = () => {
@@ -80,44 +84,25 @@ export default function Xpub({
 		setPopTypeOpen(value)
 	}
 
-	const checkErrors = useCallback(() => {
-		let hasError = false
-
-		if (inputState.alias.trim() === "") {
-			setInputErrorState((prev) => ({
-				...prev,
-				alias: "Please add your pubkey alias",
-			}))
-			hasError = true
-		} else {
-			setInputErrorState((prev) => ({
-				...prev,
-				alias: "",
-			}))
+	const checkErrors = (alias: string, pubKey: string) => {
+		const errors = {
+			alias: "",
+			pubKey: "",
 		}
 
-		if (inputState.pubKey.trim() === "") {
-			setInputErrorState((prev) => ({
-				...prev,
-				pubKey: "Please add your public key",
-			}))
-			hasError = true
-		} else {
-			setInputErrorState((prev) => ({
-				...prev,
-				pubKey: "Please add your public key",
-			}))
-		}
+		if (!alias.trim()) errors.alias = "Please add your pubkey alias"
+		if (!pubKey.trim()) errors.pubKey = "Please add your public key"
 
-		if (!hasError) {
-			setInputErrorState({ alias: "", pubKey: "" })
-		}
+		return errors
+	}
 
-		return !hasError
-	}, [inputState.alias, inputState.pubKey])
+	const errors = checkErrors(inputState.alias, inputState.pubKey)
 
 	const handleSavenew = async () => {
-		if (!checkErrors()) return
+		const validation = checkErrors(inputState.alias, inputState.pubKey)
+		setInputErrorState(validation)
+		if (validation.alias || validation.pubKey) return
+
 		try {
 			setLoading(true)
 			const res = await addXpub(inputState)
@@ -137,7 +122,10 @@ export default function Xpub({
 	}
 
 	const handleUpdatekey = async () => {
-		if (!checkErrors()) return
+		const validation = checkErrors(inputState.alias, inputState.pubKey)
+		setInputErrorState(validation)
+		if (validation.alias || validation.pubKey) return
+
 		try {
 			setEditLoading(true)
 			if (!selectedWallet) return
@@ -159,7 +147,6 @@ export default function Xpub({
 	}
 
 	const handleDeletekey = async () => {
-		checkErrors()
 		try {
 			setDeleteLoading(true)
 			if (!selectedWallet) return
@@ -186,12 +173,6 @@ export default function Xpub({
 			}
 		})
 	}
-
-	useEffect(() => {
-		if (inputState.alias !== "" || inputState.pubKey !== "") {
-			checkErrors()
-		}
-	}, [inputState, checkErrors])
 
 	return (
 		<>

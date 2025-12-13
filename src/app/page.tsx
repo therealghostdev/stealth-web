@@ -1,13 +1,12 @@
 import { auth } from "@/auth"
-import { redirect } from "next/navigation"
+import { RedirectClient } from "@/components/shared/redirectClient"
 
 export default async function Home() {
 	const data = await auth()
 	// redirect to /dashboard if user is signed in
 	if (data?.accessToken) {
-		redirect("/dashboard")
+		return <RedirectClient to="/dashboard" />
 	}
-
 	// redirect to /account/login if user is not signed in
-	redirect("/account/login")
+	return <RedirectClient to="/account/login" />
 }
