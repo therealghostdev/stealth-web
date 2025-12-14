@@ -112,7 +112,9 @@ const Page = () => {
 				title="Account Created Successfully!"
 				type="success"
 				large
-				description={"Please check your mail inbox or spam folder to activate your account"}>
+				description={
+					"Please check your mail inbox or spam folder to activate your account"
+				}>
 				<div></div>
 			</Dialog>
 			<div className="relative h-full w-full overflow-auto">

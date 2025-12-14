@@ -116,7 +116,9 @@ const InstantBuy = (props: Props) => {
 					next={() => setScreen("success")}
 				/>
 			)}
-			{screen === "success" && <Success txnHash={txnHash} next={() => props.dismiss()} />}
+			{screen === "success" && (
+				<Success txnHash={txnHash} next={() => props.dismiss()} />
+			)}
 		</div>
 	)
 }
