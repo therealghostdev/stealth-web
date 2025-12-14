@@ -47,7 +47,7 @@ const InstantBuy = (props: Props) => {
 		narration: "",
 	})
 	const [fields, setFields] = useState({
-		amount: props.amount,
+		amount: props.amount.replace(/,/g, ""),
 		currency: props.currency,
 		amountInSats: "",
 		narration: "",
@@ -67,10 +67,15 @@ const InstantBuy = (props: Props) => {
 	const handleChange = (
 		e:
 			| React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
-			| { target: { name: string; value: boolean } }
+			| { target: { name: string; value: boolean | string } }
 	) => {
 		const { name, value } = e.target
-		setFields({ ...fields, [name]: value })
+		if (name === "amount" && typeof value === "string") {
+			const cleanValue = value.replace(/,/g, "")
+			setFields({ ...fields, [name]: cleanValue })
+		} else {
+			setFields({ ...fields, [name]: value })
+		}
 	}
 
 	return (
@@ -111,7 +116,7 @@ const InstantBuy = (props: Props) => {
 					next={() => setScreen("success")}
 				/>
 			)}
-			{screen === "success" && <Success txnHash={txnHash} />}
+			{screen === "success" && <Success txnHash={txnHash} next={() => props.dismiss()} />}
 		</div>
 	)
 }
