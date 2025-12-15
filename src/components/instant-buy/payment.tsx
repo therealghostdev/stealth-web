@@ -114,7 +114,7 @@ export const Payment = (props: Props) => {
 				Make payment into the account details provided below.
 			</p>
 
-			<div className="mb-16 mt-8 w-full">
+			<div className="mt-4 w-full">
 				<p className="text-white-300">You are to pay</p>
 				<div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between sm:gap-0">
 					<p className="font-satoshi text-[28px] font-medium">
@@ -148,20 +148,23 @@ export const Payment = (props: Props) => {
 				</div>
 			</div>
 
-			<div className="my-12 w-full">
+			<div className="my-4 w-full">
 				<div className="flex flex-col gap-1 text-sm text-white-300 sm:flex-row sm:items-center sm:justify-between sm:gap-0">
 					<p>Amount of Bitcoin Purchase</p>
 					<p>Fees</p>
 				</div>
 				<div className="flex flex-col gap-1 text-xl font-medium sm:flex-row sm:items-center sm:justify-between sm:gap-0">
-					<p>{formatCurrency(+amount)}</p>
+					<p>{formatCurrency(Number(amount))}</p>
 					<p>{formatCurrency(Number(depositInfo.feeAmount))}</p>
 				</div>
 			</div>
 
+			<small className="text-alt-orange-100">
+				The fees we charge are used to pay miners
+			</small>
 			<hr className="w-full" />
 
-			<div className="mb-20 mt-12 w-full">
+			<div className="mb-10 mt-8 w-full">
 				<div className="flex w-full flex-col gap-y-2 rounded-md border border-[#2B2B2B] bg-[#161616] px-4 py-2 font-satoshi text-xl font-medium">
 					<p className="text-[14px] text-[#AAAAAA]">
 						When making your bank transfer, kindly use this as narration:
@@ -170,7 +173,7 @@ export const Payment = (props: Props) => {
 				</div>
 			</div>
 
-			<div className="mb-20 mt-12 w-full">
+			<div className="mb-10 mt-8 w-full">
 				<div className="flex flex-col gap-1 text-sm text-white-300 sm:flex-row sm:items-center sm:justify-between sm:gap-0">
 					<p>Total Amount To Be Paid</p>
 					<p>Expires In</p>
