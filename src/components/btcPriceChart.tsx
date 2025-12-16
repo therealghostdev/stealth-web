@@ -258,8 +258,8 @@ export default function BtcPriceChart() {
 
 							<Tooltip
 								formatter={(value) => {
-									if (typeof value !== "number") return "-"
-									return formatPrice(value)
+									if (typeof value !== "number") return ["-", currency]
+									return [formatPrice(value), currency]
 								}}
 								labelFormatter={(label) => new Date(label).toLocaleString()}
 								contentStyle={{

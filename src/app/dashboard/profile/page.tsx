@@ -11,7 +11,7 @@ const TabList = ["Profile", "Xpub Settings", "Security Settings", "2-FA"]
 
 const Page = () => {
 	const [user, setUser] = useState<UserProps | null>(null)
-	const [tab, setTab] = useState(1)
+	const [tab, setTab] = useState(0)
 	const [wallets, setWallets] = useState<UserProps["physicalWallets"] | []>([])
 
 	useEffect(() => {
