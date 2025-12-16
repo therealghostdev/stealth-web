@@ -3,11 +3,18 @@ import { getAllPaymentDetails, getExchangeRate } from "../helpers/get-price"
 import { getProfile } from "../helpers/get-profile"
 import Client from "./client"
 import { ExpiredSessionError } from "@/shared/error"
-// import { redirect } from "next/navigation" will remove line once new approach works
+import { auth } from "@/auth"
+import { verifyAuthTokenExpiry } from "@/shared/functions"
 
 const Page = async () => {
-	const transactionsRes = await getAllPaymentDetails()
+	const data = await auth()
+	let shouldRedirect = await verifyAuthTokenExpiry(data)
 
+	if (shouldRedirect) {
+		return <RedirectClient to="/account/login" />
+	}
+
+	const transactionsRes = await getAllPaymentDetails()
 	const rate = await getExchangeRate()
 	const profile = await getProfile()
 
@@ -24,7 +31,6 @@ const Page = async () => {
 
 	if (profile instanceof Error) {
 		if (profile instanceof ExpiredSessionError) {
-			// redirect("/account/login") will remove line once new approach works
 			return <RedirectClient to="/account/login" />
 		}
 		return (
