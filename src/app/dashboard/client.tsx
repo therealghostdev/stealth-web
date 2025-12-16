@@ -10,10 +10,10 @@ import { ExchangeRateProps, PaymentDetail } from "@/types/price"
 import { INT_REGEX } from "@/config/constants"
 import { Button, Dialog } from "@/components"
 import { UserProps } from "@/types/profile"
-import Image from "next/image"
 import GeneratePayLink from "@/components/generateLink"
 import Start from "@/components/kyc/start"
 import { formatAmountForDisplay } from "@/shared/functions"
+import BtcPriceChart from "@/components/btcPriceChart"
 
 const CurrencyList = ["NGN"] // just ngn for now
 
@@ -31,6 +31,8 @@ const Client = ({ exchangeRate: { data }, profile, transactions }: Props) => {
 	const [kycScreen, setKycScreen] = useState<0 | 1 | 2 | 3>(0)
 	const displayAmount = formatAmountForDisplay(fields.amount)
 	const paymentConfig = profile.physicalWallets
+
+	console.log(data.pricePerBtc)
 
 	const displayName = profile.firstName
 		? profile.firstName
@@ -148,8 +150,8 @@ const Client = ({ exchangeRate: { data }, profile, transactions }: Props) => {
 						<p className="font-satoshi text-2xl font-bold capitalize">
 							Hello {displayName},
 						</p>
-						<div className="grid h-[350px] w-full grid-cols-5 gap-6">
-							<div className="col-span-6 flex h-full flex-col justify-between rounded-lg border border-black-500 bg-black-700 p-6 md:col-span-3 lg:col-span-2">
+						<div className="grid h-[350px] w-full grid-cols-5 gap-6 md:mb-12">
+							<div className="col-span-6 flex h-full flex-col justify-between rounded-lg border border-black-500 bg-black-700 p-6 md:col-span-2 lg:col-span-2">
 								<div>
 									<p className="font-satoshi text-xl font-medium">Instant Buy</p>
 									<p className="mb-4 text-xs text-black-400">
@@ -218,13 +220,8 @@ const Client = ({ exchangeRate: { data }, profile, transactions }: Props) => {
 									</Button>
 								</div>
 							</div>
-							<div className="hidden h-full items-center justify-center rounded-lg border border-black-500 bg-black-700 p-6 md:col-span-2 md:flex lg:col-span-3">
-								<Image
-									src="/new_right_dashboard_stealth.png"
-									alt="Market Summary"
-									width={500}
-									height={120}
-								/>
+							<div className="hidden h-full items-center justify-center rounded-lg border border-black-500 bg-black-700 p-6 md:col-span-3 md:flex lg:col-span-3">
+								<BtcPriceChart />
 							</div>
 						</div>
 						<div className="flex h-auto w-full flex-col rounded-lg border border-black-500 bg-black-700 p-6">
