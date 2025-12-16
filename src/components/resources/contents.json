@@ -1,29 +1,22 @@
 [
 	{
 		"id": 1,
-		"url": "https://www.youtube.com/watch?v=mYIzFR--5tw",
-		"title": "Why you need a hardware wallet",
+		"url": "https://www.youtube.com/watch?v=NUS5si0d-fo",
+		"title": "Ledger unboxing NANO S PLUS",
 		"image": "/YouTube.svg",
 		"tags": ["Custody", "DCA"]
 	},
 	{
 		"id": 2,
-		"url": "https://www.youtube.com/watch?v=aZi9ZwfFHiA",
-		"title": "Get peace of mind with Trezor",
+		"url": "https://www.youtube.com/watch?v=3-v_JTPaPM0",
+		"title": "How to setup your Ledger",
 		"image": "/YouTube.svg",
 		"tags": ["Custody", "DCA"]
 	},
 	{
 		"id": 3,
-		"url": "https://www.youtube.com/watch?v=HuVH_9hnUu8",
-		"title": "How to setup a Trezor hardware wallet",
-		"image": "/YouTube.svg",
-		"tags": ["Custody", "DCA"]
-	},
-	{
-		"id": 4,
-		"url": "https://www.youtube.com/watch?v=n7hjt1Tlvlk",
-		"title": "How to setup your new Trezor safe 3 hardware wallet",
+		"url": "https://www.youtube.com/watch?v=c-bb3Sq5v18",
+		"title": "How to backup your recovery phrase",
 		"image": "/YouTube.svg",
 		"tags": ["Custody", "DCA"]
 	},
@@ -35,9 +28,23 @@
 		"tags": ["Custody", "DCA"]
 	},
 	{
+		"id": 4,
+		"url": "https://www.youtube.com/watch?v=XRzGix11T18",
+		"title": "How to recover your accounts",
+		"image": "/YouTube.svg",
+		"tags": ["Custody", "DCA"]
+	},
+	{
 		"id": 6,
-		"url": "https://www.youtube.com/watch?v=iiz4R-kQgFU",
-		"title": "3 must know Tips to safe-guard your crypto against phishing",
+		"url": "https://www.youtube.com/watch?v=zjFiNQE0_64",
+		"title": "Tangem stealth wallet unboxing",
+		"image": "/YouTube.svg",
+		"tags": ["Custody", "DCA"]
+	},
+	{
+		"id": 7,
+		"url": "https://www.youtube.com/watch?v=ijPABARWnU8",
+		"title": "Tangem durability test",
 		"image": "/YouTube.svg",
 		"tags": ["Custody", "DCA"]
 	}
