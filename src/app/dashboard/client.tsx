@@ -220,7 +220,7 @@ const Client = ({ exchangeRate: { data }, profile, transactions }: Props) => {
 									</Button>
 								</div>
 							</div>
-							<div className="hidden h-full items-center justify-center rounded-lg border border-black-500 bg-black-700 p-6 md:col-span-3 md:flex lg:col-span-3">
+							<div className="hidden h-full items-center justify-center rounded-lg border border-black-500 bg-black-700 md:col-span-3 md:flex lg:col-span-3">
 								<BtcPriceChart />
 							</div>
 						</div>
