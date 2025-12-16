@@ -62,7 +62,8 @@ const Init = (props: Props) => {
 
 		const cleanAmount = amount.replace(/,/g, "")
 		const numericAmount = parseFloat(cleanAmount)
-		const numericAmountInSats = parseFloat(amountInSats)
+		const cleanSats = amountInSats.replace(/,/g, "")
+		const numericAmountInSats = parseFloat(cleanSats)
 
 		if (!amount || isNaN(numericAmount) || numericAmount <= 0) {
 			return alert("Please enter amount!")

@@ -70,9 +70,11 @@ const InstantBuy = (props: Props) => {
 			| { target: { name: string; value: boolean | string } }
 	) => {
 		const { name, value } = e.target
-		if (name === "amount" && typeof value === "string") {
-			const cleanValue = value.replace(/,/g, "")
-			setFields({ ...fields, [name]: cleanValue })
+		if (
+			(name === "amount" || name === "amountInSats") &&
+			typeof value === "string"
+		) {
+			setFields({ ...fields, [name]: value.replace(/,/g, "") })
 		} else {
 			setFields({ ...fields, [name]: value })
 		}
