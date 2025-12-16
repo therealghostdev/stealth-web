@@ -4,7 +4,7 @@ import Link from "next/link"
 
 export default function AllResources() {
 	return (
-		<section className="flex flex-wrap items-center justify-center border border-[#494949]">
+		<section className="flex flex-wrap items-center justify-start border border-[#494949]">
 			{data.map((item, index) => (
 				<Link
 					href={item.url}

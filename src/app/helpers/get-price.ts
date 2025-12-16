@@ -53,6 +53,7 @@ export const getPaymentDetails = async (
 		next: { revalidate: 60, tags: ["paid"] },
 	})
 	const data = await response.json()
+	console.log(data, " is data")
 	if (!response.ok) {
 		throw new Error(data?.message || "Failed to fetch payment details!")
 	}

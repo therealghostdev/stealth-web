@@ -1,6 +1,9 @@
 import { ApiResponse } from "@/types/kyc"
 import { auth } from "@/auth"
+import jwtDecode from "jwt-decode"
+import { Session } from "next-auth"
 
+type JwtPayload = { exp: number }
 export const formatAmountForDisplay = (amount: string): string => {
 	if (!amount) return ""
 	const clean = amount.replace(/,/g, "")
@@ -30,4 +33,22 @@ export const getAuthHeaders = async (isJson: boolean = true) => {
 	if (isJson) baseHeaders["Content-Type"] = "application/json"
 
 	return baseHeaders
+}
+
+export const verifyAuthTokenExpiry = async (
+	value: Session | null
+): Promise<boolean> => {
+	let shouldRedirect = false
+	if (!value || !value?.accessToken) {
+		shouldRedirect = true
+	} else {
+		try {
+			const decoded = jwtDecode<JwtPayload>(value?.accessToken)
+			shouldRedirect = decoded.exp * 1000 <= Number(new Date())
+		} catch {
+			shouldRedirect = true
+		}
+	}
+
+	return shouldRedirect
 }
