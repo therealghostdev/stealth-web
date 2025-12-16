@@ -59,9 +59,19 @@ const Init = (props: Props) => {
 
 	const handleSubmit = async () => {
 		const { amount, amountInSats, walletAddress, usexpub } = fields
-		if (!amount) {
+
+		const cleanAmount = amount.replace(/,/g, "")
+		const numericAmount = parseFloat(cleanAmount)
+		const numericAmountInSats = parseFloat(amountInSats)
+
+		if (!amount || isNaN(numericAmount) || numericAmount <= 0) {
 			return alert("Please enter amount!")
 		}
+
+		if (isNaN(numericAmountInSats)) {
+			return alert("Invalid amount in sats!")
+		}
+
 		if (!walletAddress && !usexpub) {
 			setError("Please enter a wallet address")
 			return
@@ -70,8 +80,8 @@ const Init = (props: Props) => {
 		setLoading(true)
 		try {
 			const res = await getPaymentDetails({
-				amount: Number(amount),
-				amountInSats,
+				amount: numericAmount,
+				amountInSats: numericAmountInSats,
 				...(fields.usexpub
 					? {
 							walletId:
@@ -118,15 +128,69 @@ const Init = (props: Props) => {
 		}
 	}, [fields, validate])
 
+	// when amount field is being edited
 	useEffect(() => {
+		if (reversed) return
+
+		if (!fields.amount || fields.amount === "" || fields.amount === "0") {
+			props.setAmountInSats("0")
+			return
+		}
+
+		const cleanAmount = fields.amount.replace(/,/g, "")
+		const numericAmount = parseFloat(cleanAmount)
+
+		if (isNaN(numericAmount) || !isFinite(numericAmount)) {
+			props.setAmountInSats("0")
+			return
+		}
+
 		const { amountInSats } = getCurrencyValue({
-			amount: fields.amount,
+			amount: cleanAmount,
 			pricePerSat: props.exchangeRate.pricePerSat,
 			pricePerUsd: props.exchangeRate.pricePerUsd,
 		})
-		props.setAmountInSats(amountInSats.toString())
+
+		if (!isNaN(amountInSats) && isFinite(amountInSats)) {
+			props.setAmountInSats(Math.floor(amountInSats).toString())
+		} else {
+			props.setAmountInSats("0")
+		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [fields.amount])
+	}, [fields.amount, reversed])
+
+	// when sats field is being edited
+	useEffect(() => {
+		if (!reversed) return
+
+		if (
+			!fields.amountInSats ||
+			fields.amountInSats === "" ||
+			fields.amountInSats === "0"
+		) {
+			handleChange({ target: { name: "amount", value: "0" } } as any)
+			return
+		}
+
+		const cleanSats = fields.amountInSats.replace(/,/g, "")
+		const numericSats = parseFloat(cleanSats)
+
+		if (isNaN(numericSats) || !isFinite(numericSats)) {
+			handleChange({ target: { name: "amount", value: "0" } } as any)
+			return
+		}
+
+		const amountInNaira = numericSats * props.exchangeRate.pricePerSat
+
+		if (!isNaN(amountInNaira) && isFinite(amountInNaira)) {
+			handleChange({
+				target: { name: "amount", value: amountInNaira.toString() },
+			} as any)
+		} else {
+			handleChange({ target: { name: "amount", value: "0" } } as any)
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [fields.amountInSats, reversed])
 
 	useEffect(() => {
 		setDisplayAmount(formatAmountForDisplay(fields.amount))

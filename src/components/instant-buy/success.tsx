@@ -1,16 +1,22 @@
 "use client"
 import { WarningOctagon } from "@phosphor-icons/react"
-import React from "react"
-
-import { Button } from ".."
+import { Cross1Icon } from "@radix-ui/react-icons"
 
 interface Props {
 	txnHash: string
+	next: () => void
 }
 
 const Success = (props: Props) => {
 	return (
 		<div className="flex h-full w-full flex-col items-center">
+			<button
+				type="button"
+				onClick={props.next}
+				className="hover:text-white absolute right-4 top-4 text-red-100"
+				aria-label="Close">
+				<Cross1Icon fontSize={32} />
+			</button>
 			<div className="my-8">
 				<WarningOctagon weight="fill" className="text-9xl text-alt-orange-100" />
 			</div>
