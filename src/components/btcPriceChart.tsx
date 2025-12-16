@@ -135,7 +135,10 @@ export default function BtcPriceChart() {
 					minute: "2-digit",
 				})
 			case "ONE_WEEK":
-				return date.toLocaleDateString([], { weekday: "short" })
+				return date.toLocaleDateString("en-US", {
+					weekday: "short",
+					timeZone: "UTC",
+				})
 			case "ONE_MONTH":
 				return date.toLocaleDateString([], {
 					day: "numeric",
@@ -243,6 +246,8 @@ export default function BtcPriceChart() {
 								tickFormatter={formatTime}
 								stroke="#999"
 								style={{ fontSize: "12px" }}
+								interval="preserveStartEnd"
+								minTickGap={24}
 							/>
 
 							<YAxis
@@ -263,7 +268,7 @@ export default function BtcPriceChart() {
 								}}
 								labelFormatter={(label) => new Date(label).toLocaleString()}
 								contentStyle={{
-									backgroundColor: "rgba(255, 255, 255, 0.95)",
+									backgroundColor: "black",
 									border: "1px solid #e5e7eb",
 									borderRadius: "6px",
 									fontSize: "12px",
