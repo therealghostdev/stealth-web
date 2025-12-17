@@ -152,7 +152,6 @@ export default function BtcPriceChart() {
 	}
 
 	const formatPrice = (value: number) => {
-		console.log({ nairaprice: formatNaira(value), usdPrice: formatUsd(value) })
 		return currency === "NGN" ? formatNaira(value) : formatUsd(value)
 	}
 

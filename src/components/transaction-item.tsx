@@ -5,10 +5,9 @@ import {
 	WarningCircle,
 	WarningOctagon,
 } from "@phosphor-icons/react"
-import React from "react"
 
 import { formatCurrency } from "@/app/helpers/amount"
-import { formatLongDate } from "@/app/helpers/time"
+import { userTimezoneDate } from "@/app/helpers/time"
 import { PaymentDetail } from "@/types/price"
 import { SATS_PER_BTC } from "@/config/constants"
 import { Cross1Icon } from "@radix-ui/react-icons"
@@ -37,6 +36,8 @@ const StatusIcon = {
 }
 
 const TransactionItem = ({ transaction, close }: Props) => {
+	const userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone
+
 	return (
 		<div className="flex w-full flex-col items-center gap-5">
 			<button
@@ -71,7 +72,7 @@ const TransactionItem = ({ transaction, close }: Props) => {
 			<div className="flex w-full flex-col justify-start">
 				<p className="text-sm text-white-300">Date</p>
 				<p className="text-xl font-medium text-white-100">
-					{formatLongDate(new Date(transaction.createdDate))}
+					{userTimezoneDate(transaction.createdDate, userTimeZone)}
 				</p>
 			</div>
 			<div className="w-full">
