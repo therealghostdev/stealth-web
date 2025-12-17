@@ -17,9 +17,10 @@ const Page = () => {
 		e.preventDefault()
 		try {
 			setLoading(true)
+			const trimmedmail = email.trim()
 			const res = await fetch("/api/reset-init", {
 				method: "POST",
-				body: JSON.stringify({ email }),
+				body: JSON.stringify({ email: trimmedmail }),
 				headers: {
 					"Content-Type": "application/json",
 				},

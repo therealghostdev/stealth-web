@@ -76,10 +76,13 @@ const Page = () => {
 			return
 		}
 
+		const trimmedFirstName = formFields.firstName.trim()
+		const trimmedLastName = formFields.lastName.trim()
+		const trimmedmail = formFields.email.trim()
 		mutateAsync({
-			firstName: formFields.firstName,
-			lastName: formFields.lastName,
-			email: formFields.email,
+			firstName: trimmedFirstName,
+			lastName: trimmedLastName,
+			email: trimmedmail,
 			password: formFields.password,
 		})
 	}
