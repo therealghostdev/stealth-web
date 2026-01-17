@@ -102,8 +102,6 @@ const Page = () => {
 			}
 		}
 
-		console.log(recaptchaToken, "is token")
-
 		if (!recaptchaToken && !isDev) {
 			setCaptchaError("Unable to verify you. Please refresh and try again.")
 			return
