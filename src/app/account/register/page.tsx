@@ -94,7 +94,7 @@ const Page = () => {
 			return
 		}
 
-		let action = "verify_registeration"
+		let action = "verify_registration"
 		let recaptchaToken = null
 		if (!isDev) {
 			try {
