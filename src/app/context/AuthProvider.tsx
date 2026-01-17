@@ -5,6 +5,7 @@ import { SessionProvider, signOut, useSession } from "next-auth/react"
 import { useEffect } from "react"
 
 import { DecodedJwt } from "@/types/jwt"
+import { GoogleReCaptchaProvider } from "react-google-recaptcha-v3"
 
 export function SessionCheckComponent({
 	children,
@@ -49,7 +50,17 @@ export default function AuthProvider({
 }) {
 	return (
 		<SessionProvider>
-			<SessionCheckComponent>{children}</SessionCheckComponent>
+			<SessionCheckComponent>
+				<GoogleReCaptchaProvider
+					reCaptchaKey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY!}
+					scriptProps={{
+						async: true,
+						defer: true,
+					}}
+					useRecaptchaNet={true}>
+					{children}
+				</GoogleReCaptchaProvider>
+			</SessionCheckComponent>
 		</SessionProvider>
 	)
 }
