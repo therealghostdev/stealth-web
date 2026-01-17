@@ -1,11 +1,13 @@
 "use client"
 import { useMutation } from "@tanstack/react-query"
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import Link from "next/link"
+import { useRecaptcha } from "@/shared/recaptcha"
 
 import { Button, Dialog, Input, Spinner } from "@/components"
 import { PASSWORD_REGEX } from "@/config/constants"
 const Page = () => {
+	const isDev = process.env.NODE_ENV === "development"
 	const [formFields, setFormFields] = useState({
 		firstName: "",
 		lastName: "",
@@ -15,6 +17,7 @@ const Page = () => {
 	})
 	const [data, setData] = useState({ message: "", success: false })
 	const [error, setError] = useState<Error | null>(null)
+	const [captchaError, setCaptchaError] = useState<string | null>(null)
 
 	const passwordWarning =
 		formFields.password !== "" && !PASSWORD_REGEX.test(formFields.password)
@@ -30,6 +33,8 @@ const Page = () => {
 			lastName: string
 			email: string
 			password: string
+			action: string | null
+			token: string | null
 		}) =>
 			fetch("/api/register", {
 				method: "POST",
@@ -38,6 +43,8 @@ const Page = () => {
 					lastName: payload.lastName,
 					email: payload.email,
 					password: payload.password,
+					recaptchaAction: payload.action,
+					recaptchaToken: payload.token,
 				}),
 				headers: {
 					"Content-Type": "application/json",
@@ -59,13 +66,20 @@ const Page = () => {
 					setError(new Error("Failed to parse response"))
 				})
 		},
+		onError: () => {
+			setError(new Error("Something went wrong. Please try again."))
+		},
 	})
+
+	const { getToken } = useRecaptcha()
 
 	const handleChange = (e: React.ChangeEvent<HTMLInputElement>) =>
 		setFormFields((prev) => ({ ...prev, [e.target.name]: e.target.value }))
 
 	const formAction = async (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault()
+
+		setCaptchaError(null)
 		const isValid = PASSWORD_REGEX.test(formFields.password)
 		if (!isValid) {
 			alert("Password is not strong enough!")
@@ -76,18 +90,39 @@ const Page = () => {
 			return
 		}
 
+		let action = "verify_registeration"
+		let recaptchaToken = null
+		if (!isDev) {
+			try {
+				recaptchaToken = await getToken(action)
+			} catch (err) {
+				console.error("reCAPTCHA error:", err)
+				setCaptchaError("reCAPTCHA failed. Please refresh and try again.")
+				return
+			}
+		}
+
+		console.log(recaptchaToken, "is token")
+
+		if (!recaptchaToken && !isDev) {
+			setCaptchaError("Unable to verify you. Please refresh and try again.")
+			return
+		}
+
 		mutateAsync({
 			firstName: formFields.firstName,
 			lastName: formFields.lastName,
 			email: formFields.email,
 			password: formFields.password,
+			action: isDev ? null : action,
+			token: recaptchaToken,
 		})
 	}
 
 	return (
 		<>
 			<Dialog
-				isOpen={!!error}
+				isOpen={!!error && !error.message.includes("reCAPTCHA")}
 				onDismiss={() => setError(null)}
 				title="Registration Error"
 				type="error"
@@ -172,6 +207,11 @@ const Page = () => {
 							label="Confirm Password"
 							error={passwordsMatch ? "" : "Passwords do not match"}
 						/>
+						{(captchaError || error?.message?.includes("reCAPTCHA")) && (
+							<p className="mb-3 text-center text-sm text-[#B31919]">
+								{captchaError || error?.message}
+							</p>
+						)}
 					</div>
 					<div className="mt-20 flex w-full flex-col">
 						<Button type="submit" width="w-full" disabled={isPending}>
