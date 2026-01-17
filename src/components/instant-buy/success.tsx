@@ -25,6 +25,11 @@ const Success = (props: Props) => {
 				Your Bitcoin purchase is being processed. You will receive an email
 				notification once it has been processed.
 			</p>
+
+			<p className="my-1 text-center text-xl text-alt-orange-100">
+				(Kindly check your spam if not seen in mail inbox.)
+			</p>
+
 			{/* // TODO: uncomment when mempool.space is implemented */}
 			{/* <p className="mb-44 max-w-[90%] break-words text-center text-alt-orange-100">
 				{props.txnHash}

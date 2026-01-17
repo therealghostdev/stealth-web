@@ -79,6 +79,10 @@ const Page = () => {
 	const formAction = async (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault()
 
+		const trimmedFirstName = formFields.firstName.trim()
+		const trimmedLastName = formFields.lastName.trim()
+		const trimmedmail = formFields.email.trim()
+
 		setCaptchaError(null)
 		const isValid = PASSWORD_REGEX.test(formFields.password)
 		if (!isValid) {
@@ -108,9 +112,9 @@ const Page = () => {
 		}
 
 		mutateAsync({
-			firstName: formFields.firstName,
-			lastName: formFields.lastName,
-			email: formFields.email,
+			firstName: trimmedFirstName,
+			lastName: trimmedLastName,
+			email: trimmedmail,
 			password: formFields.password,
 			action: isDev ? null : action,
 			token: recaptchaToken,
