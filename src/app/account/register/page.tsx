@@ -90,29 +90,13 @@ const Page = () => {
 			return
 		}
 
-		let action = "verify_registeration"
-		let recaptchaToken = null
-		if (!isDev) {
-			try {
-				recaptchaToken = await getToken(action)
-			} catch (err) {
-				console.error("reCAPTCHA error:", err)
-				setCaptchaError("reCAPTCHA failed. Please refresh and try again.")
-				return
-			}
-		}
-
-		console.log(recaptchaToken, "is token")
-
-		if (!recaptchaToken && !isDev) {
-			setCaptchaError("Unable to verify you. Please refresh and try again.")
-			return
-		}
-
+		const trimmedFirstName = formFields.firstName.trim()
+		const trimmedLastName = formFields.lastName.trim()
+		const trimmedmail = formFields.email.trim()
 		mutateAsync({
-			firstName: formFields.firstName,
-			lastName: formFields.lastName,
-			email: formFields.email,
+			firstName: trimmedFirstName,
+			lastName: trimmedLastName,
+			email: trimmedmail,
 			password: formFields.password,
 			action: isDev ? null : action,
 			token: recaptchaToken,

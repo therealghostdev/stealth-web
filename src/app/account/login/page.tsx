@@ -23,8 +23,9 @@ const LoginForm = () => {
 		}
 		setLoading(true)
 		try {
+			const trimmedmail = formFields.email.trim()
 			const res = await signIn("credentials", {
-				username: formFields.email,
+				username: trimmedmail,
 				password: formFields.password,
 				redirect: false,
 				callbackUrl,

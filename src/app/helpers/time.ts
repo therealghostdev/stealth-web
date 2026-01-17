@@ -34,3 +34,16 @@ export const formatLongDate = (date: Date) => {
 
 	return `${dateString} • ${timeString}`
 }
+
+export const userTimezoneDate = (
+	value: Date | string,
+	timeZone: string
+): string => {
+	const createdDate = new Date(value)
+
+	return createdDate.toLocaleString("en-US", {
+		timeZone,
+		dateStyle: "medium",
+		timeStyle: "short",
+	})
+}
