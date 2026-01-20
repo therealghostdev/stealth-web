@@ -6,7 +6,7 @@ import { useRecaptcha } from "@/shared/recaptcha"
 
 import { Button, Dialog, Input, Spinner } from "@/components"
 import { PASSWORD_REGEX } from "@/config/constants"
-import RecaptchaProvider from "@/app/context/RegisterRecaptcha"
+
 const Page = () => {
 	const isDev = process.env.NODE_ENV === "development"
 	const [formFields, setFormFields] = useState({
