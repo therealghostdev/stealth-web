@@ -8,7 +8,8 @@ export default function RecaptchaProvider({
 }) {
 	return (
 		<GoogleReCaptchaProvider
-			reCaptchaKey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY!}>
+			reCaptchaKey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY!}
+			scriptProps={{ appendTo: "head" }}>
 			{children}
 		</GoogleReCaptchaProvider>
 	)

@@ -123,7 +123,7 @@ const Page = () => {
 	}
 
 	return (
-		<RecaptchaProvider>
+		<>
 			<Dialog
 				isOpen={!!error && !error.message.includes("reCAPTCHA")}
 				onDismiss={() => setError(null)}
@@ -229,7 +229,7 @@ const Page = () => {
 					</div>
 				</form>
 			</div>
-		</RecaptchaProvider>
+		</>
 	)
 }
 
