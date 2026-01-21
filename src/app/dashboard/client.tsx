@@ -32,8 +32,6 @@ const Client = ({ exchangeRate: { data }, profile, transactions }: Props) => {
 	const displayAmount = formatAmountForDisplay(fields.amount)
 	const paymentConfig = profile.physicalWallets
 
-	console.log(data.pricePerBtc)
-
 	const displayName = profile.firstName
 		? profile.firstName
 		: profile.email.split("@")[0]
