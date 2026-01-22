@@ -2,7 +2,7 @@
 import { WarningCircle } from "@phosphor-icons/react"
 import { useEffect, useState } from "react"
 
-import { TableBody, TableHead } from "@/components/transactions-table"
+import TransactionsTable from "@/components/transactions-table"
 import { CurrencyInput } from "@/components/shared/input"
 import { formatCurrency, formatDigits } from "../helpers/amount"
 import InstantBuy from "@/components/instant-buy"
@@ -14,6 +14,7 @@ import GeneratePayLink from "@/components/generateLink"
 import Start from "@/components/kyc/start"
 import { formatAmountForDisplay } from "@/shared/functions"
 import BtcPriceChart from "@/components/btcPriceChart"
+import { UpdateIcon } from "@radix-ui/react-icons"
 
 const CurrencyList = ["NGN"] // just ngn for now
 
@@ -28,9 +29,12 @@ const Client = ({ exchangeRate: { data }, profile, transactions }: Props) => {
 	const [openModal, setOpenModal] = useState(false)
 	const [openGenerateModal, setOpenGenerateModal] = useState(false)
 	const [error, setError] = useState("")
+	const [selectedCurrency, setSelectedCurrency] = useState("BTC")
 	const [kycScreen, setKycScreen] = useState<0 | 1 | 2 | 3>(0)
 	const displayAmount = formatAmountForDisplay(fields.amount)
 	const paymentConfig = profile.physicalWallets
+
+	console.log(data)
 
 	const displayName = profile.firstName
 		? profile.firstName
@@ -148,6 +152,37 @@ const Client = ({ exchangeRate: { data }, profile, transactions }: Props) => {
 						<p className="font-satoshi text-2xl font-bold capitalize">
 							Hello {displayName},
 						</p>
+
+						{/* Currency Tabs */}
+						<div className="mb-6 flex justify-between gap-4">
+							<div className="flex gap-x-2 rounded-md bg-[#0E0E0E] px-5 py-2">
+								<button
+									onClick={() => setSelectedCurrency("BTC")}
+									className={`rounded-md px-4 py-2 text-sm font-medium outline-none transition-colors ${
+										selectedCurrency === "BTC"
+											? "rounded-md border border-[#494949] bg-[#010101] font-medium text-[#F7931A] shadow-sm shadow-[#4949490D]"
+											: ""
+									}`}>
+									Buy BTC
+								</button>
+								<button
+									onClick={() => setSelectedCurrency("USDT")}
+									className={`px-4 py-2 font-satoshi text-[16px] outline-none transition-colors ${
+										selectedCurrency === "USDT"
+											? "rounded-md border border-[#494949] bg-[#010101] font-medium text-[#F7931A] shadow-sm shadow-[#4949490D]"
+											: ""
+									}`}>
+									Buy USDT
+								</button>
+							</div>
+
+							<button
+								onClick={() => window.location.reload()}
+								className={`hidden items-center justify-center gap-x-4 rounded-md border border-[#494949] px-4 py-2 text-sm font-medium shadow-sm shadow-[#494949] outline-none transition-colors md:flex`}>
+								Refresh <UpdateIcon color="#D4D4D4" />
+							</button>
+						</div>
+
 						<div className="grid h-[350px] w-full grid-cols-5 gap-6 md:mb-12">
 							<div className="col-span-6 flex h-full flex-col justify-between rounded-lg border border-black-500 bg-black-700 p-6 md:col-span-2 lg:col-span-2">
 								<div>
@@ -214,7 +249,7 @@ const Client = ({ exchangeRate: { data }, profile, transactions }: Props) => {
 										onClick={handleSubmit1}
 										// width="w-full"
 										style={{ width: "100%" }}>
-										Buy Now
+										Buy {selectedCurrency}
 									</Button>
 								</div>
 							</div>
@@ -222,15 +257,12 @@ const Client = ({ exchangeRate: { data }, profile, transactions }: Props) => {
 								<BtcPriceChart />
 							</div>
 						</div>
-						<div className="flex h-auto w-full flex-col rounded-lg border border-black-500 bg-black-700 p-6">
-							<div className="flex items-center">
-								<p className="font-satoshi text-xl font-medium">Recent Transactions</p>
-							</div>
-							<hr className="my-4 w-full" />
-							<div>
-								<TableHead />
-								<TableBody transactions={transactions} />
-							</div>
+
+						<div>
+							<TransactionsTable
+								transactions={transactions}
+								pricePerUsd={data.pricePerUsd}
+							/>
 						</div>
 					</div>
 				</>
